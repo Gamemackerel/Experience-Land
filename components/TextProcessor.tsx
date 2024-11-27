@@ -1,20 +1,21 @@
 import React, { useState, useCallback } from 'react';
 import { StyleSheet, TextInput, ScrollView, View } from 'react-native';
-import { TextService } from '@/services/textService';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
+import { TextProcessBase } from '@/services/textProcessingServices/textProcessBase';
 
 interface TextProcessorProps {
   placeholder?: string;
+  processService: TextProcessBase;
 }
 
-export function TextProcessor({ placeholder = 'Enter text to process...' }: TextProcessorProps) {
+export function TextProcessor({ placeholder = 'Enter text to process...', processService }: TextProcessorProps) {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState<string[]>([]);
 
   const processText = useCallback((text: string) => {
     if (text.trim()) {
-      const result = TextService.processText(text);
+      const result = processService.processText(text);
       setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
       setInputText('');
     }
@@ -22,6 +23,16 @@ export function TextProcessor({ placeholder = 'Enter text to process...' }: Text
 
   return (
     <ThemedView style={styles.container}>
+      <ScrollView
+        style={styles.outputContainer}
+        contentContainerStyle={styles.outputContent}
+      >
+        {outputText.map((text, index) => (
+          <ThemedText key={index} style={styles.outputText}>
+            {text}
+          </ThemedText>
+        ))}
+      </ScrollView>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -33,17 +44,6 @@ export function TextProcessor({ placeholder = 'Enter text to process...' }: Text
           returnKeyType="send"
         />
       </View>
-
-      <ScrollView
-        style={styles.outputContainer}
-        contentContainerStyle={styles.outputContent}
-      >
-        {outputText.map((text, index) => (
-          <ThemedText key={index} style={styles.outputText}>
-            {text}
-          </ThemedText>
-        ))}
-      </ScrollView>
     </ThemedView>
   );
 }
@@ -76,5 +76,6 @@ const styles = StyleSheet.create({
   outputText: {
     fontSize: 14,
     lineHeight: 20,
+    color: '#333',
   },
 });

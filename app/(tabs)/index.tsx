@@ -35,6 +35,15 @@ export default function HomeScreen() {
             </ThemedView>
           </TouchableOpacity>
         </Link>
+        <Link href="./processors/double" asChild>
+          <TouchableOpacity style={styles.processorLink}>
+            <IconSymbol name="chevron.right" size={24} color="#687076" />
+            <ThemedView style={styles.processorContent}>
+              <ThemedText type="defaultSemiBold">Double Text</ThemedText>
+              <ThemedText>Double any text you type</ThemedText>
+            </ThemedView>
+          </TouchableOpacity>
+        </Link>
       </ThemedView>
 
       {/* ... other sections ... */}

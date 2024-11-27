@@ -3,17 +3,18 @@ export interface TextProcessingResult {
     timestamp: string;
   }
 
-  export class TextService {
+  export abstract class TextProcessBase {
+
+    protected apiKey: string;
+
+    constructor(apiKey: string) {
+        this.apiKey = apiKey;
+    }
+
     /**
      * Processes input text by reversing it and adding a timestamp
      * @param text The input text to process
      * @returns ProcessingResult containing the reversed text and timestamp
      */
-    static processText(text: string): TextProcessingResult {
-      const reversed = text.split('').reverse().join('');
-      return {
-        processedText: reversed,
-        timestamp: new Date().toLocaleTimeString(),
-      };
-    }
+    abstract processText(text: string): TextProcessingResult;
   }
