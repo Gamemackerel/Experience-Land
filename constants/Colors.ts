@@ -1,26 +1,64 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
+// constants/Colors.ts
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+import { Platform } from 'react-native';
+
+const terminalGreen = '#00FF00';
+const dimTerminalGreen = '#00B800';
+const terminalBackground = '#001100';
+const terminalBlack = '#000800';
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    text: terminalGreen,
+    background: terminalBlack,
+    tint: terminalGreen,
+    icon: dimTerminalGreen,
+    tabIconDefault: dimTerminalGreen,
+    tabIconSelected: terminalGreen,
+    // Terminal specific colors
+    terminal: {
+      cursor: terminalGreen,
+      selection: '#003300',
+      highlight: '#004400',
+      border: dimTerminalGreen,
+    }
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    // We'll use the same colors for both themes to maintain the terminal look
+    text: terminalGreen,
+    background: terminalBlack,
+    tint: terminalGreen,
+    icon: dimTerminalGreen,
+    tabIconDefault: dimTerminalGreen,
+    tabIconSelected: terminalGreen,
+    terminal: {
+      cursor: terminalGreen,
+      selection: '#003300',
+      highlight: '#004400',
+      border: dimTerminalGreen,
+    }
   },
+};
+
+// Add terminal-specific styles
+export const TerminalStyles = {
+  text: {
+    fontFamily: Platform.select({
+      ios: 'Menlo',
+      android: 'monospace',
+      default: 'Courier New'
+    }),
+    letterSpacing: 0.5,
+  },
+  container: {
+    shadowColor: terminalGreen,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  scanline: {
+    opacity: 0.3,
+    backgroundColor: terminalGreen,
+  }
 };

@@ -13,4 +13,11 @@ export class Reverser extends TextProcessBase {
       timestamp: new Date().toLocaleTimeString(),
     };
   }
+
+  initialOutput(): TextProcessingResult {
+    return {
+      processedText: 'Having no memory of anything, you walk into a room with a mirror and see yourself. You are the only person in the room. The one thing that is immediately apparent is that in this room, everything is mysteriously reversed.',
+      timestamp: new Date().toLocaleTimeString(),
+    };
+  }
 }

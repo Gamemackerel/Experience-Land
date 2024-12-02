@@ -7,7 +7,7 @@ import { Doubler } from '@/services/textProcessingServices/doubler';
 export default function ReverseProcessorScreen() {
   return (
     <ThemedView style={styles.container}>
-      <ThemedText style={styles.title}>Reverse Text Processor</ThemedText>
+      <ThemedText >Double Text Processor</ThemedText>
       <TextProcessor placeholder="Type something and press enter..." processService={new Doubler('API_KEY')} />
     </ThemedView>
   );

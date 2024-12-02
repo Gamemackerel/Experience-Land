@@ -17,4 +17,6 @@ export interface TextProcessingResult {
      * @returns ProcessingResult containing the reversed text and timestamp
      */
     abstract processText(text: string): TextProcessingResult;
+
+    abstract initialOutput(): TextProcessingResult;
   }

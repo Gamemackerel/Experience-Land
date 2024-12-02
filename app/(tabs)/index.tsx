@@ -8,50 +8,40 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
+    <ScrollView style={styles.container}>
+      <ThemedView style={styles.section}>
+        <ThemedText >Welcome to Experience_Land.</ThemedText>
       </ThemedView>
 
       <ThemedView style={styles.section}>
-        <ThemedText type="subtitle">Text Processors</ThemedText>
-        <Link href="./processors/reverse" asChild>
+        <ThemedText >This is a special place where you can travel into and explore other worlds and perspectives.</ThemedText>
+      </ThemedView>
+
+      <ThemedView style={styles.section}>
+        <Link href="./explore" asChild>
           <TouchableOpacity style={styles.processorLink}>
             <IconSymbol name="chevron.right" size={24} color="#687076" />
             <ThemedView style={styles.processorContent}>
-              <ThemedText type="defaultSemiBold">Reverse Text</ThemedText>
-              <ThemedText>Reverse any text you type</ThemedText>
-            </ThemedView>
-          </TouchableOpacity>
-        </Link>
-        <Link href="./processors/double" asChild>
-          <TouchableOpacity style={styles.processorLink}>
-            <IconSymbol name="chevron.right" size={24} color="#687076" />
-            <ThemedView style={styles.processorContent}>
-              <ThemedText type="defaultSemiBold">Double Text</ThemedText>
-              <ThemedText>Double any text you type</ThemedText>
+              <ThemedText>BROWSE EXPERIENCES</ThemedText>
             </ThemedView>
           </TouchableOpacity>
         </Link>
       </ThemedView>
 
       {/* ... other sections ... */}
-    </ParallaxScrollView>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',

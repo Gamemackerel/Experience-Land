@@ -1,6 +1,8 @@
-import { Text, type TextProps, StyleSheet } from 'react-native';
+// components/ThemedText.tsx
 
+import { Text, TextProps, StyleSheet } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { TerminalStyles } from '@/constants/Colors';
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
@@ -20,6 +22,7 @@ export function ThemedText({
   return (
     <Text
       style={[
+        TerminalStyles.text,
         { color },
         type === 'default' ? styles.default : undefined,
         type === 'title' ? styles.title : undefined,
@@ -53,8 +56,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   link: {
-    lineHeight: 30,
     fontSize: 16,
-    color: '#0a7ea4',
+    textDecorationLine: 'underline',
+    // Keep the same color as regular text for terminal theme
   },
 });

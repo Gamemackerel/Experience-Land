@@ -7,7 +7,7 @@ import { Reverser } from '@/services/textProcessingServices/reverser';
 export default function ReverseProcessorScreen() {
   return (
     <ThemedView style={styles.container}>
-      <ThemedText style={styles.title}>Reverse Text Processor</ThemedText>
+      <ThemedText>Reverse Text Processor</ThemedText>
       <TextProcessor placeholder="Type something and press enter..." processService={new Reverser('API_KEY')} />
     </ThemedView>
   );

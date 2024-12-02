@@ -40,14 +40,18 @@ export * from 'expo-router';
 declare module 'expo-router' {
   export namespace ExpoRouter {
     export interface __routes<T extends string | object = string> {
-      hrefInputParams: { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/explore` | `/explore`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}` | `/`; params?: Router.UnknownInputParams; } | { pathname: `/+not-found`, params: Router.UnknownInputParams & {  } };
-      hrefOutputParams: { pathname: Router.RelativePathString, params?: Router.UnknownOutputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownOutputParams } | { pathname: `/_sitemap`; params?: Router.UnknownOutputParams; } | { pathname: `${'/(tabs)'}/explore` | `/explore`; params?: Router.UnknownOutputParams; } | { pathname: `${'/(tabs)'}` | `/`; params?: Router.UnknownOutputParams; } | { pathname: `/+not-found`, params: Router.UnknownOutputParams & {  } };
-      href: Router.RelativePathString | Router.ExternalPathString | `/_sitemap${`?${string}` | `#${string}` | ''}` | `${'/(tabs)'}/explore${`?${string}` | `#${string}` | ''}` | `/explore${`?${string}` | `#${string}` | ''}` | `${'/(tabs)'}${`?${string}` | `#${string}` | ''}` | `/${`?${string}` | `#${string}` | ''}` | { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/explore` | `/explore`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}` | `/`; params?: Router.UnknownInputParams; } | `/+not-found` | { pathname: `/+not-found`, params: Router.UnknownInputParams & {  } };
+      hrefInputParams: { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/explore` | `/explore`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}` | `/`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/processors/double` | `/processors/double`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/processors/reverse` | `/processors/reverse`; params?: Router.UnknownInputParams; } | { pathname: `/+not-found`, params: Router.UnknownInputParams & {  } };
+      hrefOutputParams: { pathname: Router.RelativePathString, params?: Router.UnknownOutputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownOutputParams } | { pathname: `/_sitemap`; params?: Router.UnknownOutputParams; } | { pathname: `${'/(tabs)'}/explore` | `/explore`; params?: Router.UnknownOutputParams; } | { pathname: `${'/(tabs)'}` | `/`; params?: Router.UnknownOutputParams; } | { pathname: `${'/(tabs)'}/processors/double` | `/processors/double`; params?: Router.UnknownOutputParams; } | { pathname: `${'/(tabs)'}/processors/reverse` | `/processors/reverse`; params?: Router.UnknownOutputParams; } | { pathname: `/+not-found`, params: Router.UnknownOutputParams & {  } };
+      href: Router.RelativePathString | Router.ExternalPathString | `/_sitemap${`?${string}` | `#${string}` | ''}` | `${'/(tabs)'}/explore${`?${string}` | `#${string}` | ''}` | `/explore${`?${string}` | `#${string}` | ''}` | `${'/(tabs)'}${`?${string}` | `#${string}` | ''}` | `/${`?${string}` | `#${string}` | ''}` | `${'/(tabs)'}/processors/double${`?${string}` | `#${string}` | ''}` | `/processors/double${`?${string}` | `#${string}` | ''}` | `${'/(tabs)'}/processors/reverse${`?${string}` | `#${string}` | ''}` | `/processors/reverse${`?${string}` | `#${string}` | ''}` | { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/explore` | `/explore`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}` | `/`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/processors/double` | `/processors/double`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/processors/reverse` | `/processors/reverse`; params?: Router.UnknownInputParams; } | `/+not-found` | { pathname: `/+not-found`, params: Router.UnknownInputParams & {  } };
     }
   }
 }
 
 ```
+
+# .expo/web/cache/production/images/favicon/favicon-24272cdaeff82cc5facdaccd982a6f05b60c4504704bbf94c19a6388659880bb-contain-transparent/favicon-48.png
+
+This is a binary file of the type: Image
 
 # .gitignore
 
@@ -89,7 +93,10 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# development
 app-example
+.aidigest
+
 
 ```
 
@@ -239,178 +246,51 @@ export default function TabLayout() {
 # app/(tabs)/explore.tsx
 
 ```tsx
-import { StyleSheet, Image, Platform } from 'react-native';
+// app/(tabs)/index.tsx
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-
-export default function TabTwoScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
-  );
-}
-
-const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-});
-
-```
-
-# app/(tabs)/index.tsx
-
-```tsx
-import { Image, StyleSheet, Platform } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Link } from 'expo-router';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { ScrollView } from 'react-native-gesture-handler';
 
-export default function HomeScreen() {
+export default function Explore() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
+    <ScrollView style={styles.container}>
+      <ThemedView style={styles.section}>
+        <ThemedText >{'Available Experiences:'}</ThemedText>
+        <Link href="./processors/reverse" asChild>
+          <TouchableOpacity style={styles.processorLink}>
+            <IconSymbol name="chevron.right" size={24} color="#687076" />
+            <ThemedView style={styles.processorContent}>
+              <ThemedText>REVERSE ROOM</ThemedText>
+            </ThemedView>
+          </TouchableOpacity>
+        </Link>
+        <Link href="./processors/double" asChild>
+          <TouchableOpacity style={styles.processorLink}>
+            <IconSymbol name="chevron.right" size={24} color="#687076" />
+            <ThemedView style={styles.processorContent}>
+              <ThemedText>DOUBLE OR NOTHING</ThemedText>
+            </ThemedView>
+          </TouchableOpacity>
+        </Link>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+
+      {/* ... other sections ... */}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -427,8 +307,165 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
   },
+  section: {
+    marginBottom: 24,
+    gap: 12,
+  },
+  processorLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    backgroundColor: 'rgba(0,0,0,0.03)',
+    borderRadius: 8,
+  },
+  processorContent: {
+    marginLeft: 12,
+    gap: 4,
+  }
 });
+```
 
+# app/(tabs)/index.tsx
+
+```tsx
+// app/(tabs)/index.tsx
+
+import { StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Link } from 'expo-router';
+
+import { HelloWave } from '@/components/HelloWave';
+import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { ScrollView } from 'react-native-gesture-handler';
+
+export default function HomeScreen() {
+  return (
+    <ScrollView style={styles.container}>
+      <ThemedView style={styles.section}>
+        <ThemedText >Welcome to Experience_Land.</ThemedText>
+      </ThemedView>
+
+      <ThemedView style={styles.section}>
+        <ThemedText >This is a special place where you can travel into and explore other worlds and perspectives.</ThemedText>
+      </ThemedView>
+
+      <ThemedView style={styles.section}>
+        <Link href="./explore" asChild>
+          <TouchableOpacity style={styles.processorLink}>
+            <IconSymbol name="chevron.right" size={24} color="#687076" />
+            <ThemedView style={styles.processorContent}>
+              <ThemedText>BROWSE EXPERIENCES</ThemedText>
+            </ThemedView>
+          </TouchableOpacity>
+        </Link>
+      </ThemedView>
+
+      {/* ... other sections ... */}
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  stepContainer: {
+    gap: 8,
+    marginBottom: 8,
+  },
+  reactLogo: {
+    height: 178,
+    width: 290,
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+  },
+  section: {
+    marginBottom: 24,
+    gap: 12,
+  },
+  processorLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    backgroundColor: 'rgba(0,0,0,0.03)',
+    borderRadius: 8,
+  },
+  processorContent: {
+    marginLeft: 12,
+    gap: 4,
+  }
+});
+```
+
+# app/(tabs)/processors/double.tsx
+
+```tsx
+import { StyleSheet } from 'react-native';
+import { TextProcessor } from '@/components/TextProcessor';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
+import { Doubler } from '@/services/textProcessingServices/doubler';
+
+export default function ReverseProcessorScreen() {
+  return (
+    <ThemedView style={styles.container}>
+      <ThemedText >Double Text Processor</ThemedText>
+      <TextProcessor placeholder="Type something and press enter..." processService={new Doubler('API_KEY')} />
+    </ThemedView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+});
+```
+
+# app/(tabs)/processors/reverse.tsx
+
+```tsx
+import { StyleSheet } from 'react-native';
+import { TextProcessor } from '@/components/TextProcessor';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
+import { Reverser } from '@/services/textProcessingServices/reverser';
+
+export default function ReverseProcessorScreen() {
+  return (
+    <ThemedView style={styles.container}>
+      <ThemedText>Reverse Text Processor</ThemedText>
+      <TextProcessor placeholder="Type something and press enter..." processService={new Reverser('API_KEY')} />
+    </ThemedView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+});
 ```
 
 # app/+not-found.tsx
@@ -787,12 +824,203 @@ const styles = StyleSheet.create({
 
 ```
 
+# components/TerminalScanline.tsx
+
+```tsx
+// Draft for scanline effect to add over all text
+
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  useSharedValue,
+  withSequence
+} from 'react-native-reanimated';
+import { TerminalStyles } from '@/constants/Colors';
+
+export function TerminalScanline() {
+  const translateY = useSharedValue(0);
+
+  React.useEffect(() => {
+    translateY.value = withRepeat(
+      withSequence(
+        withTiming(-15, { duration: 1000 }),
+        withTiming(0, { duration: 0 })
+      ),
+      -1
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }]
+  }));
+
+  return (
+    <Animated.View
+      style={[
+        styles.scanline,
+        animatedStyle
+      ]}
+    />
+  );
+}
+
+const styles = StyleSheet.create({
+  scanline: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 2,
+    ...TerminalStyles.scanline,
+  },
+});
+
+export default TerminalScanline;
+```
+
+# components/TextProcessor.tsx
+
+```tsx
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { TextInput, ScrollView, View, StyleSheet } from 'react-native';
+import { ThemedText } from './ThemedText';
+import { ThemedTextBox } from './ThemedTextBox';
+import { ThemedView } from './ThemedView';
+import { TextProcessBase } from '@/services/textProcessingServices/textProcessBase';
+import { IconSymbol } from './ui/IconSymbol';
+import { Colors } from '@/constants/Colors';
+
+interface TextProcessorProps {
+  placeholder?: string;
+  processService: TextProcessBase;
+}
+
+export function TextProcessor({ placeholder = 'Enter text to process...', processService }: TextProcessorProps) {
+  const [inputText, setInputText] = useState('');
+  const [outputText, setOutputText] = useState<string[]>([]);
+  const inputRef = useRef<TextInput>(null);
+
+  useEffect(() => {
+    // Focus on mount
+    const focusInput = () => {
+      inputRef.current?.focus();
+    };
+
+    // Initial focus
+    focusInput();
+
+    // Set up an interval to check and restore focus
+    const focusInterval = setInterval(focusInput, 1000);
+
+    // Do an initial text output
+    const result = processService.initialOutput();
+    setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
+
+    return () => {
+      clearInterval(focusInterval);
+    };
+  }, []);
+
+  const processText = useCallback((text: string) => {
+    if (text.trim()) {
+      const result = processService.processText(text);
+      setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
+      setInputText('');
+
+      // Ensure focus after processing
+      requestAnimationFrame(() => {
+        inputRef.current?.focus();
+      });
+    }
+  }, []);
+
+  return (
+    <ThemedView style={styles.container}>
+      <ScrollView
+        style={styles.outputContainer}
+        contentContainerStyle={styles.outputContent}
+      >
+        {outputText.map((text, index) => (
+          <ThemedText key={index} style={styles.outputText}>
+            {text}
+          </ThemedText>
+        ))}
+      </ScrollView>
+      <View style={styles.inputContainer}>
+        <View style={styles.inputWrapper}>
+          <IconSymbol
+            name="chevron.right"
+            size={20}
+            color={Colors.light.text}
+            style={styles.chevron}
+          />
+          <ThemedTextBox
+            ref={inputRef}
+            style={styles.input}
+            value={inputText}
+            onChangeText={setInputText}
+            placeholderTextColor={Colors.light.icon}
+            onSubmitEditing={() => processText(inputText)}
+            returnKeyType="send"
+            autoFocus
+          />
+        </View>
+      </View>
+    </ThemedView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    gap: 16,
+  },
+  inputContainer: {
+    borderRadius: 8,
+    padding: 8,
+    backgroundColor: Colors.light.background,
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  chevron: {
+    marginLeft: 4,
+  },
+  input: {
+    height: 40,
+    padding: 8,
+    fontSize: 16,
+    flex: 1,
+  },
+  outputContainer: {
+    flex: 1,
+    borderRadius: 8,
+  },
+  outputContent: {
+    padding: 16,
+    gap: 8,
+  },
+  outputText: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+});
+```
+
 # components/ThemedText.tsx
 
 ```tsx
-import { Text, type TextProps, StyleSheet } from 'react-native';
+// components/ThemedText.tsx
 
+import { Text, TextProps, StyleSheet } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { TerminalStyles } from '@/constants/Colors';
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
@@ -812,6 +1040,7 @@ export function ThemedText({
   return (
     <Text
       style={[
+        TerminalStyles.text,
         { color },
         type === 'default' ? styles.default : undefined,
         type === 'title' ? styles.title : undefined,
@@ -845,12 +1074,86 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   link: {
-    lineHeight: 30,
     fontSize: 16,
-    color: '#0a7ea4',
+    textDecorationLine: 'underline',
+    // Keep the same color as regular text for terminal theme
   },
 });
+```
 
+# components/ThemedTextBox.tsx
+
+```tsx
+import React, { forwardRef } from 'react';
+import { TextInput, TextInputProps, StyleSheet } from 'react-native';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { TerminalStyles } from '@/constants/Colors';
+import { Platform } from 'react-native';
+
+export type ThemedTextBoxProps = TextInputProps & {
+  lightColor?: string;
+  darkColor?: string;
+  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
+};
+
+export const ThemedTextBox = forwardRef<TextInput, ThemedTextBoxProps>(
+  ({ style, lightColor, darkColor, type = 'default', ...rest }, ref) => {
+    const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+
+    return (
+      <TextInput
+        ref={ref}
+        style={[
+          TerminalStyles.text,
+          styles.input,
+          { color },
+          type === 'default' ? styles.default : undefined,
+          type === 'title' ? styles.title : undefined,
+          type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
+          type === 'subtitle' ? styles.subtitle : undefined,
+          type === 'link' ? styles.link : undefined,
+          style,
+          {...Platform.select({
+            web: {
+              // @ts-ignore: Web-only property
+              outline: 'none',
+            },
+          })},
+        ]}
+
+        {...rest}
+      />
+    );
+  }
+);
+
+const styles = StyleSheet.create({
+  input: {
+    borderWidth: 0,
+  },
+  default: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  defaultSemiBold: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '600',
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    lineHeight: 32,
+  },
+  subtitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  link: {
+    fontSize: 16,
+    textDecorationLine: 'underline',
+  },
+});
 ```
 
 # components/ThemedView.tsx
@@ -1003,33 +1306,70 @@ export function useBottomTabOverflow() {
 # constants/Colors.ts
 
 ```ts
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
+// constants/Colors.ts
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+import { Platform } from 'react-native';
+
+const terminalGreen = '#00FF00';
+const dimTerminalGreen = '#00B800';
+const terminalBackground = '#001100';
+const terminalBlack = '#000800';
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    text: terminalGreen,
+    background: terminalBlack,
+    tint: terminalGreen,
+    icon: dimTerminalGreen,
+    tabIconDefault: dimTerminalGreen,
+    tabIconSelected: terminalGreen,
+    // Terminal specific colors
+    terminal: {
+      cursor: terminalGreen,
+      selection: '#003300',
+      highlight: '#004400',
+      border: dimTerminalGreen,
+    }
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    // We'll use the same colors for both themes to maintain the terminal look
+    text: terminalGreen,
+    background: terminalBlack,
+    tint: terminalGreen,
+    icon: dimTerminalGreen,
+    tabIconDefault: dimTerminalGreen,
+    tabIconSelected: terminalGreen,
+    terminal: {
+      cursor: terminalGreen,
+      selection: '#003300',
+      highlight: '#004400',
+      border: dimTerminalGreen,
+    }
   },
 };
 
+// Add terminal-specific styles
+export const TerminalStyles = {
+  text: {
+    fontFamily: Platform.select({
+      ios: 'Menlo',
+      android: 'monospace',
+      default: 'Courier New'
+    }),
+    letterSpacing: 0.5,
+  },
+  container: {
+    shadowColor: terminalGreen,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  scanline: {
+    opacity: 0.3,
+    backgroundColor: terminalGreen,
+  }
+};
 ```
 
 # expo-env.d.ts
@@ -1305,6 +1645,89 @@ const moveDirectories = async () => {
 
 moveDirectories();
 
+```
+
+# services/textProcessingServices/doubler.ts
+
+```ts
+import { TextProcessingResult, TextProcessBase } from "./textProcessBase";
+
+export class Doubler extends TextProcessBase {
+  /**
+   * Processes input text by doubling it and adding a timestamp
+   * @param text The input text to process
+   * @returns ProcessingResult containing the processed text and timestamp
+   */
+  processText(text: string): TextProcessingResult {
+    const doubled = text.repeat(2);
+    return {
+      processedText: doubled,
+      timestamp: new Date().toLocaleTimeString(),
+    };
+  }
+
+  initialOutput(): TextProcessingResult {
+    return {
+      processedText: 'Walking through the woods for days now, you come upon a small cabin with a man on the porch. The man is sitting on a bench poised with his hands on his hips, and his eyes are pointing opposite directions. You greet him with a \"hello!\", and he responds strangely and instantly \"hellohello!\"',
+      timestamp: new Date().toLocaleTimeString(),
+    };
+  }
+}
+```
+
+# services/textProcessingServices/reverser.ts
+
+```ts
+import { TextProcessingResult, TextProcessBase } from "./textProcessBase";
+
+export class Reverser extends TextProcessBase {
+  /**
+   * Processes input text by reversing it and adding a timestamp
+   * @param text The input text to process
+   * @returns ProcessingResult containing the reversed text and timestamp
+   */
+  processText(text: string): TextProcessingResult {
+    const reversed = text.split('').reverse().join('');
+    return {
+      processedText: reversed,
+      timestamp: new Date().toLocaleTimeString(),
+    };
+  }
+
+  initialOutput(): TextProcessingResult {
+    return {
+      processedText: 'Having no memory of anything, you walk into a room with a mirror and see yourself. You are the only person in the room. The one thing that is immediately apparent is that in this room, everything is mysteriously reversed.',
+      timestamp: new Date().toLocaleTimeString(),
+    };
+  }
+}
+```
+
+# services/textProcessingServices/textProcessBase.ts
+
+```ts
+export interface TextProcessingResult {
+    processedText: string;
+    timestamp: string;
+  }
+
+  export abstract class TextProcessBase {
+
+    protected apiKey: string;
+
+    constructor(apiKey: string) {
+        this.apiKey = apiKey;
+    }
+
+    /**
+     * Processes input text by reversing it and adding a timestamp
+     * @param text The input text to process
+     * @returns ProcessingResult containing the reversed text and timestamp
+     */
+    abstract processText(text: string): TextProcessingResult;
+
+    abstract initialOutput(): TextProcessingResult;
+  }
 ```
 
 # tsconfig.json
