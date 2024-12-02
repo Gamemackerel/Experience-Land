@@ -5,8 +5,11 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import { Platform } from 'react-native';
 
+import ReverseProcessorScreen from './experiences/reverse';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/Colors';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -29,8 +32,22 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: Colors.light.background,  // Terminal black background
+        },
+        headerTintColor: Colors.light.text,   // Terminal green text
+        headerTitleStyle: {
+          fontFamily: Platform.select({
+            ios: 'Menlo',
+            android: 'monospace',
+            default: 'Courier New'
+          }),
+        },
+      }}>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="experiences/index" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

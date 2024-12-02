@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import { TextInput, TextInputProps, StyleSheet } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { TerminalStyles } from '@/constants/Colors';
+import { TerminalStyles } from '@/constants/AppStyles';
 import { Platform } from 'react-native';
 
 export type ThemedTextBoxProps = TextInputProps & {

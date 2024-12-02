@@ -4,10 +4,23 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Doubler } from '@/services/textProcessingServices/doubler';
 
-export default function ReverseProcessorScreen() {
+import { useLayoutEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+
+
+export default function DoubleProcessorScreen() {
+
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'Double or Nothing',
+    });
+  }, [navigation]);
+
+
   return (
     <ThemedView style={styles.container}>
-      <ThemedText >Double Text Processor</ThemedText>
       <TextProcessor placeholder="Type something and press enter..." processService={new Doubler('API_KEY')} />
     </ThemedView>
   );

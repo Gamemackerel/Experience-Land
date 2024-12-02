@@ -4,10 +4,21 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Reverser } from '@/services/textProcessingServices/reverser';
 
+import { useLayoutEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+
+
 export default function ReverseProcessorScreen() {
+
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'Reverse Room',
+    });
+  }, [navigation]);
   return (
     <ThemedView style={styles.container}>
-      <ThemedText>Reverse Text Processor</ThemedText>
       <TextProcessor placeholder="Type something and press enter..." processService={new Reverser('API_KEY')} />
     </ThemedView>
   );
