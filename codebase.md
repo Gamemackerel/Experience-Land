@@ -40,9 +40,9 @@ export * from 'expo-router';
 declare module 'expo-router' {
   export namespace ExpoRouter {
     export interface __routes<T extends string | object = string> {
-      hrefInputParams: { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/explore` | `/explore`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}` | `/`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/processors/double` | `/processors/double`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/processors/reverse` | `/processors/reverse`; params?: Router.UnknownInputParams; } | { pathname: `/+not-found`, params: Router.UnknownInputParams & {  } };
-      hrefOutputParams: { pathname: Router.RelativePathString, params?: Router.UnknownOutputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownOutputParams } | { pathname: `/_sitemap`; params?: Router.UnknownOutputParams; } | { pathname: `${'/(tabs)'}/explore` | `/explore`; params?: Router.UnknownOutputParams; } | { pathname: `${'/(tabs)'}` | `/`; params?: Router.UnknownOutputParams; } | { pathname: `${'/(tabs)'}/processors/double` | `/processors/double`; params?: Router.UnknownOutputParams; } | { pathname: `${'/(tabs)'}/processors/reverse` | `/processors/reverse`; params?: Router.UnknownOutputParams; } | { pathname: `/+not-found`, params: Router.UnknownOutputParams & {  } };
-      href: Router.RelativePathString | Router.ExternalPathString | `/_sitemap${`?${string}` | `#${string}` | ''}` | `${'/(tabs)'}/explore${`?${string}` | `#${string}` | ''}` | `/explore${`?${string}` | `#${string}` | ''}` | `${'/(tabs)'}${`?${string}` | `#${string}` | ''}` | `/${`?${string}` | `#${string}` | ''}` | `${'/(tabs)'}/processors/double${`?${string}` | `#${string}` | ''}` | `/processors/double${`?${string}` | `#${string}` | ''}` | `${'/(tabs)'}/processors/reverse${`?${string}` | `#${string}` | ''}` | `/processors/reverse${`?${string}` | `#${string}` | ''}` | { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/explore` | `/explore`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}` | `/`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/processors/double` | `/processors/double`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/processors/reverse` | `/processors/reverse`; params?: Router.UnknownInputParams; } | `/+not-found` | { pathname: `/+not-found`, params: Router.UnknownInputParams & {  } };
+      hrefInputParams: { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/`; params?: Router.UnknownInputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `/experiences/double`; params?: Router.UnknownInputParams; } | { pathname: `/experiences/reverse`; params?: Router.UnknownInputParams; } | { pathname: `/experiences`; params?: Router.UnknownInputParams; } | { pathname: `/+not-found`, params: Router.UnknownInputParams & {  } };
+      hrefOutputParams: { pathname: Router.RelativePathString, params?: Router.UnknownOutputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownOutputParams } | { pathname: `/`; params?: Router.UnknownOutputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownOutputParams; } | { pathname: `/experiences/double`; params?: Router.UnknownOutputParams; } | { pathname: `/experiences/reverse`; params?: Router.UnknownOutputParams; } | { pathname: `/experiences`; params?: Router.UnknownOutputParams; } | { pathname: `/+not-found`, params: Router.UnknownOutputParams & {  } };
+      href: Router.RelativePathString | Router.ExternalPathString | `/${`?${string}` | `#${string}` | ''}` | `/_sitemap${`?${string}` | `#${string}` | ''}` | `/experiences/double${`?${string}` | `#${string}` | ''}` | `/experiences/reverse${`?${string}` | `#${string}` | ''}` | `/experiences${`?${string}` | `#${string}` | ''}` | { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/`; params?: Router.UnknownInputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `/experiences/double`; params?: Router.UnknownInputParams; } | { pathname: `/experiences/reverse`; params?: Router.UnknownInputParams; } | { pathname: `/experiences`; params?: Router.UnknownInputParams; } | `/+not-found` | { pathname: `/+not-found`, params: Router.UnknownInputParams & {  } };
     }
   }
 }
@@ -157,8 +157,11 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import { Platform } from 'react-native';
 
+import ReverseProcessorScreen from './experiences/reverse';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/Colors';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -181,8 +184,22 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: Colors.light.background,  // Terminal black background
+        },
+        headerTintColor: Colors.light.text,   // Terminal green text
+        headerTitleStyle: {
+          fontFamily: Platform.select({
+            ios: 'Menlo',
+            android: 'monospace',
+            default: 'Courier New'
+          }),
+        },
+      }}>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="experiences/index" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
@@ -192,67 +209,93 @@ export default function RootLayout() {
 
 ```
 
-# app/(tabs)/_layout.tsx
+# app/+not-found.tsx
 
 ```tsx
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { Link, Stack } from 'expo-router';
+import { StyleSheet } from 'react-native';
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+export default function NotFoundScreen() {
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+    <>
+      <Stack.Screen options={{ title: 'Oops!' }} />
+      <ThemedView style={styles.container}>
+        <ThemedText type="title">This screen doesn't exist.</ThemedText>
+        <Link href="/" style={styles.link}>
+          <ThemedText type="link">Go to home screen!</ThemedText>
+        </Link>
+      </ThemedView>
+    </>
   );
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  link: {
+    marginTop: 15,
+    paddingVertical: 15,
+  },
+});
+
 ```
 
-# app/(tabs)/explore.tsx
+# app/experiences/double.tsx
 
 ```tsx
-// app/(tabs)/index.tsx
+import { StyleSheet } from 'react-native';
+import { TextProcessor } from '@/components/TextProcessor';
+import { ThemedView } from '@/components/ThemedView';
+import { Doubler } from '@/services/textProcessingServices/doubler';
 
+import { useLayoutEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+
+
+export default function DoubleProcessorScreen() {
+
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'Double or Nothing',
+    });
+  }, [navigation]);
+
+
+  return (
+    <ThemedView style={styles.container}>
+      <TextProcessor processService={new Doubler('API_KEY')} />
+    </ThemedView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+});
+```
+
+# app/experiences/index.tsx
+
+```tsx
 import { StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Link } from 'expo-router';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -263,7 +306,7 @@ export default function Explore() {
     <ScrollView style={styles.container}>
       <ThemedView style={styles.section}>
         <ThemedText >{'Available Experiences:'}</ThemedText>
-        <Link href="./processors/reverse" asChild>
+        <Link href="./experiences/reverse" asChild>
           <TouchableOpacity style={styles.processorLink}>
             <IconSymbol name="chevron.right" size={24} color="#687076" />
             <ThemedView style={styles.processorContent}>
@@ -271,7 +314,7 @@ export default function Explore() {
             </ThemedView>
           </TouchableOpacity>
         </Link>
-        <Link href="./processors/double" asChild>
+        <Link href="./experiences/double" asChild>
           <TouchableOpacity style={styles.processorLink}>
             <IconSymbol name="chevron.right" size={24} color="#687076" />
             <ThemedView style={styles.processorContent}>
@@ -325,7 +368,49 @@ const styles = StyleSheet.create({
 });
 ```
 
-# app/(tabs)/index.tsx
+# app/experiences/reverse.tsx
+
+```tsx
+import { StyleSheet } from 'react-native';
+import { TextProcessor } from '@/components/TextProcessor';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
+import { Reverser } from '@/services/textProcessingServices/reverser';
+
+import { useLayoutEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+
+
+export default function ReverseProcessorScreen() {
+
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'Reverse Room',
+    });
+  }, [navigation]);
+  return (
+    <ThemedView style={styles.container}>
+      <TextProcessor processService={new Reverser('API_KEY')} />
+    </ThemedView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+});
+```
+
+# app/index.tsx
 
 ```tsx
 // app/(tabs)/index.tsx
@@ -333,8 +418,6 @@ const styles = StyleSheet.create({
 import { StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Link } from 'expo-router';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -352,7 +435,7 @@ export default function HomeScreen() {
       </ThemedView>
 
       <ThemedView style={styles.section}>
-        <Link href="./explore" asChild>
+        <Link href="./experiences" asChild>
           <TouchableOpacity style={styles.processorLink}>
             <IconSymbol name="chevron.right" size={24} color="#687076" />
             <ThemedView style={styles.processorContent}>
@@ -404,106 +487,6 @@ const styles = StyleSheet.create({
     gap: 4,
   }
 });
-```
-
-# app/(tabs)/processors/double.tsx
-
-```tsx
-import { StyleSheet } from 'react-native';
-import { TextProcessor } from '@/components/TextProcessor';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
-import { Doubler } from '@/services/textProcessingServices/doubler';
-
-export default function ReverseProcessorScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <ThemedText >Double Text Processor</ThemedText>
-      <TextProcessor placeholder="Type something and press enter..." processService={new Doubler('API_KEY')} />
-    </ThemedView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-});
-```
-
-# app/(tabs)/processors/reverse.tsx
-
-```tsx
-import { StyleSheet } from 'react-native';
-import { TextProcessor } from '@/components/TextProcessor';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
-import { Reverser } from '@/services/textProcessingServices/reverser';
-
-export default function ReverseProcessorScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <ThemedText>Reverse Text Processor</ThemedText>
-      <TextProcessor placeholder="Type something and press enter..." processService={new Reverser('API_KEY')} />
-    </ThemedView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-});
-```
-
-# app/+not-found.tsx
-
-```tsx
-import { Link, Stack } from 'expo-router';
-import { StyleSheet } from 'react-native';
-
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-
-export default function NotFoundScreen() {
-  return (
-    <>
-      <Stack.Screen options={{ title: 'Oops!' }} />
-      <ThemedView style={styles.container}>
-        <ThemedText type="title">This screen doesn't exist.</ThemedText>
-        <Link href="/" style={styles.link}>
-          <ThemedText type="link">Go to home screen!</ThemedText>
-        </Link>
-      </ThemedView>
-    </>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-});
-
 ```
 
 # assets/fonts/SpaceMono-Regular.ttf
@@ -588,299 +571,6 @@ it(`renders correctly`, () => {
 
 ```
 
-# components/Collapsible.tsx
-
-```tsx
-import { PropsWithChildren, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export function Collapsible({ children, title }: PropsWithChildren & { title: string }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const theme = useColorScheme() ?? 'light';
-
-  return (
-    <ThemedView>
-      <TouchableOpacity
-        style={styles.heading}
-        onPress={() => setIsOpen((value) => !value)}
-        activeOpacity={0.8}>
-        <IconSymbol
-          name="chevron.right"
-          size={18}
-          weight="medium"
-          color={theme === 'light' ? Colors.light.icon : Colors.dark.icon}
-          style={{ transform: [{ rotate: isOpen ? '90deg' : '0deg' }] }}
-        />
-
-        <ThemedText type="defaultSemiBold">{title}</ThemedText>
-      </TouchableOpacity>
-      {isOpen && <ThemedView style={styles.content}>{children}</ThemedView>}
-    </ThemedView>
-  );
-}
-
-const styles = StyleSheet.create({
-  heading: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  content: {
-    marginTop: 6,
-    marginLeft: 24,
-  },
-});
-
-```
-
-# components/ExternalLink.tsx
-
-```tsx
-import { Link } from 'expo-router';
-import { openBrowserAsync } from 'expo-web-browser';
-import { type ComponentProps } from 'react';
-import { Platform } from 'react-native';
-
-type Props = Omit<ComponentProps<typeof Link>, 'href'> & { href: string };
-
-export function ExternalLink({ href, ...rest }: Props) {
-  return (
-    <Link
-      target="_blank"
-      {...rest}
-      href={href}
-      onPress={async (event) => {
-        if (Platform.OS !== 'web') {
-          // Prevent the default behavior of linking to the default browser on native.
-          event.preventDefault();
-          // Open the link in an in-app browser.
-          await openBrowserAsync(href);
-        }
-      }}
-    />
-  );
-}
-
-```
-
-# components/HapticTab.tsx
-
-```tsx
-import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
-import { PlatformPressable } from '@react-navigation/elements';
-import * as Haptics from 'expo-haptics';
-
-export function HapticTab(props: BottomTabBarButtonProps) {
-  return (
-    <PlatformPressable
-      {...props}
-      onPressIn={(ev) => {
-        if (process.env.EXPO_OS === 'ios') {
-          // Add a soft haptic feedback when pressing down on the tabs.
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        }
-        props.onPressIn?.(ev);
-      }}
-    />
-  );
-}
-
-```
-
-# components/HelloWave.tsx
-
-```tsx
-import { StyleSheet } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  withRepeat,
-  withSequence,
-} from 'react-native-reanimated';
-
-import { ThemedText } from '@/components/ThemedText';
-
-export function HelloWave() {
-  const rotationAnimation = useSharedValue(0);
-
-  rotationAnimation.value = withRepeat(
-    withSequence(withTiming(25, { duration: 150 }), withTiming(0, { duration: 150 })),
-    4 // Run the animation 4 times
-  );
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${rotationAnimation.value}deg` }],
-  }));
-
-  return (
-    <Animated.View style={animatedStyle}>
-      <ThemedText style={styles.text}>👋</ThemedText>
-    </Animated.View>
-  );
-}
-
-const styles = StyleSheet.create({
-  text: {
-    fontSize: 28,
-    lineHeight: 32,
-    marginTop: -6,
-  },
-});
-
-```
-
-# components/ParallaxScrollView.tsx
-
-```tsx
-import type { PropsWithChildren, ReactElement } from 'react';
-import { StyleSheet } from 'react-native';
-import Animated, {
-  interpolate,
-  useAnimatedRef,
-  useAnimatedStyle,
-  useScrollViewOffset,
-} from 'react-native-reanimated';
-
-import { ThemedView } from '@/components/ThemedView';
-import { useBottomTabOverflow } from '@/components/ui/TabBarBackground';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-const HEADER_HEIGHT = 250;
-
-type Props = PropsWithChildren<{
-  headerImage: ReactElement;
-  headerBackgroundColor: { dark: string; light: string };
-}>;
-
-export default function ParallaxScrollView({
-  children,
-  headerImage,
-  headerBackgroundColor,
-}: Props) {
-  const colorScheme = useColorScheme() ?? 'light';
-  const scrollRef = useAnimatedRef<Animated.ScrollView>();
-  const scrollOffset = useScrollViewOffset(scrollRef);
-  const bottom = useBottomTabOverflow();
-  const headerAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: interpolate(
-            scrollOffset.value,
-            [-HEADER_HEIGHT, 0, HEADER_HEIGHT],
-            [-HEADER_HEIGHT / 2, 0, HEADER_HEIGHT * 0.75]
-          ),
-        },
-        {
-          scale: interpolate(scrollOffset.value, [-HEADER_HEIGHT, 0, HEADER_HEIGHT], [2, 1, 1]),
-        },
-      ],
-    };
-  });
-
-  return (
-    <ThemedView style={styles.container}>
-      <Animated.ScrollView
-        ref={scrollRef}
-        scrollEventThrottle={16}
-        scrollIndicatorInsets={{ bottom }}
-        contentContainerStyle={{ paddingBottom: bottom }}>
-        <Animated.View
-          style={[
-            styles.header,
-            { backgroundColor: headerBackgroundColor[colorScheme] },
-            headerAnimatedStyle,
-          ]}>
-          {headerImage}
-        </Animated.View>
-        <ThemedView style={styles.content}>{children}</ThemedView>
-      </Animated.ScrollView>
-    </ThemedView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    height: HEADER_HEIGHT,
-    overflow: 'hidden',
-  },
-  content: {
-    flex: 1,
-    padding: 32,
-    gap: 16,
-    overflow: 'hidden',
-  },
-});
-
-```
-
-# components/TerminalScanline.tsx
-
-```tsx
-// Draft for scanline effect to add over all text
-
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  withRepeat,
-  withTiming,
-  useSharedValue,
-  withSequence
-} from 'react-native-reanimated';
-import { TerminalStyles } from '@/constants/Colors';
-
-export function TerminalScanline() {
-  const translateY = useSharedValue(0);
-
-  React.useEffect(() => {
-    translateY.value = withRepeat(
-      withSequence(
-        withTiming(-15, { duration: 1000 }),
-        withTiming(0, { duration: 0 })
-      ),
-      -1
-    );
-  }, []);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }]
-  }));
-
-  return (
-    <Animated.View
-      style={[
-        styles.scanline,
-        animatedStyle
-      ]}
-    />
-  );
-}
-
-const styles = StyleSheet.create({
-  scanline: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 2,
-    ...TerminalStyles.scanline,
-  },
-});
-
-export default TerminalScanline;
-```
-
 # components/TextProcessor.tsx
 
 ```tsx
@@ -894,11 +584,10 @@ import { IconSymbol } from './ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 
 interface TextProcessorProps {
-  placeholder?: string;
   processService: TextProcessBase;
 }
 
-export function TextProcessor({ placeholder = 'Enter text to process...', processService }: TextProcessorProps) {
+export function TextProcessor({ processService }: TextProcessorProps) {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState<string[]>([]);
   const inputRef = useRef<TextInput>(null);
@@ -1020,7 +709,7 @@ const styles = StyleSheet.create({
 
 import { Text, TextProps, StyleSheet } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { TerminalStyles } from '@/constants/Colors';
+import { TerminalStyles } from '@/constants/AppStyles';
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
@@ -1087,7 +776,7 @@ const styles = StyleSheet.create({
 import React, { forwardRef } from 'react';
 import { TextInput, TextInputProps, StyleSheet } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { TerminalStyles } from '@/constants/Colors';
+import { TerminalStyles } from '@/constants/AppStyles';
 import { Platform } from 'react-native';
 
 export type ThemedTextBoxProps = TextInputProps & {
@@ -1303,12 +992,31 @@ export function useBottomTabOverflow() {
 
 ```
 
+# constants/AppStyles.ts
+
+```ts
+import { Platform } from 'react-native';
+
+export const TerminalStyles = {
+    text: {
+      fontFamily: Platform.select({
+        ios: 'Menlo',
+        android: 'monospace',
+        default: 'Courier New'
+      }),
+      letterSpacing: 0.5,
+    },
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 5,
+};
+```
+
 # constants/Colors.ts
 
 ```ts
 // constants/Colors.ts
-
-import { Platform } from 'react-native';
 
 const terminalGreen = '#00FF00';
 const dimTerminalGreen = '#00B800';
@@ -1348,28 +1056,6 @@ export const Colors = {
   },
 };
 
-// Add terminal-specific styles
-export const TerminalStyles = {
-  text: {
-    fontFamily: Platform.select({
-      ios: 'Menlo',
-      android: 'monospace',
-      default: 'Courier New'
-    }),
-    letterSpacing: 0.5,
-  },
-  container: {
-    shadowColor: terminalGreen,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    elevation: 5,
-  },
-  scanline: {
-    opacity: 0.3,
-    backgroundColor: terminalGreen,
-  }
-};
 ```
 
 # expo-env.d.ts

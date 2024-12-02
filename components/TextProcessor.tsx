@@ -8,11 +8,10 @@ import { IconSymbol } from './ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 
 interface TextProcessorProps {
-  placeholder?: string;
   processService: TextProcessBase;
 }
 
-export function TextProcessor({ placeholder = 'Enter text to process...', processService }: TextProcessorProps) {
+export function TextProcessor({ processService }: TextProcessorProps) {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState<string[]>([]);
   const inputRef = useRef<TextInput>(null);

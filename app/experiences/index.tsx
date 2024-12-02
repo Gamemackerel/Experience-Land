@@ -1,5 +1,3 @@
-// app/(tabs)/index.tsx
-
 import { StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Link } from 'expo-router';
 

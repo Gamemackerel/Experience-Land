@@ -19,7 +19,7 @@ export default function ReverseProcessorScreen() {
   }, [navigation]);
   return (
     <ThemedView style={styles.container}>
-      <TextProcessor placeholder="Type something and press enter..." processService={new Reverser('API_KEY')} />
+      <TextProcessor processService={new Reverser('API_KEY')} />
     </ThemedView>
   );
 }

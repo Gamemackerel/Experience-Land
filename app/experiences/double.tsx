@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { TextProcessor } from '@/components/TextProcessor';
 import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
 import { Doubler } from '@/services/textProcessingServices/doubler';
 
 import { useLayoutEffect } from 'react';
@@ -21,7 +20,7 @@ export default function DoubleProcessorScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <TextProcessor placeholder="Type something and press enter..." processService={new Doubler('API_KEY')} />
+      <TextProcessor processService={new Doubler('API_KEY')} />
     </ThemedView>
   );
 }
