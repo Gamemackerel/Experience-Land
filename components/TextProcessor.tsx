@@ -18,28 +18,17 @@ export function TextProcessor({ processService }: TextProcessorProps) {
   const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    const focusInput = () => {
-      inputRef.current?.focus();
-    };
-
-    focusInput();
-    const focusInterval = setInterval(focusInput, 1000);
-
     const result = processService.initialOutput();
     setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
-
-    return () => {
-      clearInterval(focusInterval);
-    };
   }, []);
 
   const processText = useCallback(async (text: string) => {
     if (text.trim()) {
       setIsProcessing(true);
+      setInputText('');
       try {
         const result = await Promise.resolve(processService.processText(text));
         setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
-        setInputText('');
       } catch (error) {
         setOutputText(prev => [
           ...prev,
@@ -47,9 +36,6 @@ export function TextProcessor({ processService }: TextProcessorProps) {
         ]);
       } finally {
         setIsProcessing(false);
-        requestAnimationFrame(() => {
-          inputRef.current?.focus();
-        });
       }
     }
   }, []);
@@ -84,9 +70,10 @@ export function TextProcessor({ processService }: TextProcessorProps) {
             value={inputText}
             onChangeText={setInputText}
             placeholderTextColor={Colors.light.icon}
-            onSubmitEditing={() => processText(inputText)}
+            onSubmitEditing={() => !isProcessing && processText(inputText)}
             returnKeyType="send"
-            editable={!isProcessing}
+            submitBehavior='submit'
+            blurOnSubmit={false}
             autoFocus
           />
         </View>
