@@ -19,7 +19,7 @@ export function TextProcessor({ processService }: TextProcessorProps) {
 
   useEffect(() => {
     const result = processService.initialOutput();
-    setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
+    setOutputText(prev => [...prev, `* ${result.processedText}`]);
   }, []);
 
   const processText = useCallback(async (text: string) => {
@@ -27,12 +27,12 @@ export function TextProcessor({ processService }: TextProcessorProps) {
       setIsProcessing(true);
       setInputText('');
       try {
-        const result = await Promise.resolve(processService.processText(text));
-        setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
+        const result = await Promise.resolve(processService.processText(text, outputText));
+        setOutputText(prev => [...prev, `* ${result.processedText}`]);
       } catch (error) {
         setOutputText(prev => [
           ...prev,
-          `[${new Date().toLocaleTimeString()}] Error: ${error.message}`,
+          `* Error: ${error.message}`,
         ]);
       } finally {
         setIsProcessing(false);

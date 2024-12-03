@@ -15,7 +15,7 @@ export abstract class TextProcessBase {
    * @param text The input text to process
    * @returns Promise<TextProcessingResult> containing the processed text and timestamp
    */
-  abstract processText(text: string): Promise<TextProcessingResult> | TextProcessingResult;
+  abstract processText(text: string, previousOutputs?: string[]): Promise<TextProcessingResult> | TextProcessingResult;
 
   abstract initialOutput(): TextProcessingResult;
 }

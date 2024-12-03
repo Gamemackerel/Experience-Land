@@ -89,6 +89,8 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
+.notenv
 
 # typescript
 *.tsbuildinfo
@@ -97,6 +99,12 @@ yarn-error.*
 app-example
 .aidigest
 
+```
+
+# .notenv
+
+```
+EXPO_PUBLIC_ANTHROPIC_API_KEY=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
 ```
 
 # app.json
@@ -266,9 +274,12 @@ import { ThemedView } from '@/components/ThemedView';
 import { AnthropicProcessor } from '@/services/textProcessingServices/aichamber';
 import { useLayoutEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useApiKey } from '@/hooks/useApiKey';
+import { ThemedText } from '@/components/ThemedText';
 
 export default function AnthropicProcessorScreen() {
   const navigation = useNavigation();
+  const { apiKey } = useApiKey();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -276,10 +287,18 @@ export default function AnthropicProcessorScreen() {
     });
   }, [navigation]);
 
+  if (!apiKey) {
+    return (
+      <ThemedView style={styles.container}>
+        <ThemedText>No API key found. Please return to the home screen and enter your API key.</ThemedText>
+      </ThemedView>
+    );
+  }
+
   return (
     <ThemedView style={styles.container}>
       <TextProcessor
-        processService={new AnthropicProcessor(process.env.EXPO_PUBLIC_ANTHROPIC_API_KEY || '')}
+        processService={new AnthropicProcessor(apiKey)}
       />
     </ThemedView>
   );
@@ -467,37 +486,118 @@ const styles = StyleSheet.create({
 # app/index.tsx
 
 ```tsx
-import { StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Link } from 'expo-router';
-
+import { useState } from 'react';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { ThemedTextBox } from '@/components/ThemedTextBox';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useApiKey } from '@/hooks/useApiKey';
+import { Colors } from '@/constants/Colors';
+import { validateAnthropicApiKey } from '@/utils/apiKeyValidator';
 
 export default function HomeScreen() {
+  const { apiKey, isLoading, saveApiKey } = useApiKey();
+  const [inputApiKey, setInputApiKey] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmitApiKey = async () => {
+    if (!inputApiKey.trim()) {
+      setError('Please enter an API key');
+      return;
+    }
+
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      // Validate the API key before saving
+      await validateAnthropicApiKey(inputApiKey.trim());
+      await saveApiKey(inputApiKey.trim());
+      setInputApiKey('');
+    } catch (err) {
+      setError(err.message || 'Failed to validate API key');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <ThemedView style={[styles.container, styles.centered]}>
+        <ActivityIndicator size="large" color={Colors.light.text} />
+      </ThemedView>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
       <ThemedView style={styles.section}>
-        <ThemedText >Welcome to Experience_Land.</ThemedText>
+        <ThemedText>Welcome to Experience_Land.</ThemedText>
       </ThemedView>
 
       <ThemedView style={styles.section}>
-        <ThemedText >This is a special place where you can travel to other worlds and explore new perspectives.</ThemedText>
+        <ThemedText>This is a special place where you can travel to other worlds and explore new perspectives.</ThemedText>
       </ThemedView>
 
-      <ThemedView style={styles.section}>
-        <Link href="./experiences" asChild>
-          <TouchableOpacity style={styles.processorLink}>
-            <IconSymbol name="chevron.right" size={24} color="#687076" />
-            <ThemedView style={styles.processorContent}>
-              <ThemedText>BROWSE EXPERIENCES</ThemedText>
-            </ThemedView>
-          </TouchableOpacity>
-        </Link>
-      </ThemedView>
-
-      {/* ... other sections ... */}
+      {!apiKey ? (
+        <ThemedView style={styles.section}>
+          <ThemedText>Please enter your Anthropic API key to continue:</ThemedText>
+          <ThemedView style={styles.inputContainer}>
+            {isSubmitting ? (
+                <ActivityIndicator size="small" color={Colors.light.text} />
+              ) : (
+                <IconSymbol name="chevron.right" size={24} color={Colors.light.text} />
+              )}
+            <ThemedTextBox
+              value={inputApiKey}
+              onChangeText={(text) => {
+                setInputApiKey(text);
+                setError(null); // Clear error when user types
+              }}
+              placeholderTextColor={Colors.light.icon}
+              style={[
+                styles.input,
+              ]}
+              secureTextEntry
+              onSubmitEditing={handleSubmitApiKey}
+              editable={!isSubmitting}
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoFocus
+            />
+            <TouchableOpacity
+              onPress={handleSubmitApiKey}
+              style={[
+                styles.submitButton,
+                isSubmitting ? styles.submitButtonDisabled : null
+              ]}
+              disabled={isSubmitting}
+            >
+            </TouchableOpacity>
+          </ThemedView>
+          {error && (
+            <ThemedText style={styles.errorText}>{error}</ThemedText>
+          )}
+          <ThemedText>
+            Don't have an API key? Visit anthropic.com to get one.
+          </ThemedText>
+        </ThemedView>
+      ) : (
+        <ThemedView style={styles.section}>
+          <Link href="./experiences" asChild>
+            <TouchableOpacity style={styles.processorLink}>
+              <IconSymbol name="chevron.right" size={24} color={Colors.light.text} />
+              <ThemedView style={styles.processorContent}>
+                <ThemedText>BROWSE EXPERIENCES</ThemedText>
+              </ThemedView>
+            </TouchableOpacity>
+          </Link>
+        </ThemedView>
+      )}
     </ScrollView>
   );
 }
@@ -507,25 +607,35 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  titleContainer: {
-    flexDirection: 'row',
+  centered: {
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
   },
   section: {
     marginBottom: 24,
     gap: 12,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.03)',
+    borderRadius: 8,
+    padding: 12,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    marginRight: 12,
+  },
+  submitButton: {
+    padding: 8,
+  },
+  submitButtonDisabled: {
+    opacity: 0.5,
+  },
+  errorText: {
+    color: '#FF4444',
+    fontSize: 14,
   },
   processorLink: {
     flexDirection: 'row',
@@ -537,7 +647,7 @@ const styles = StyleSheet.create({
   processorContent: {
     marginLeft: 12,
     gap: 4,
-  }
+  },
 });
 ```
 
@@ -769,28 +879,17 @@ export function TextProcessor({ processService }: TextProcessorProps) {
   const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    const focusInput = () => {
-      inputRef.current?.focus();
-    };
-
-    focusInput();
-    const focusInterval = setInterval(focusInput, 1000);
-
     const result = processService.initialOutput();
     setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
-
-    return () => {
-      clearInterval(focusInterval);
-    };
   }, []);
 
   const processText = useCallback(async (text: string) => {
     if (text.trim()) {
       setIsProcessing(true);
+      setInputText('');
       try {
         const result = await Promise.resolve(processService.processText(text));
         setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
-        setInputText('');
       } catch (error) {
         setOutputText(prev => [
           ...prev,
@@ -798,9 +897,6 @@ export function TextProcessor({ processService }: TextProcessorProps) {
         ]);
       } finally {
         setIsProcessing(false);
-        requestAnimationFrame(() => {
-          inputRef.current?.focus();
-        });
       }
     }
   }, []);
@@ -835,9 +931,10 @@ export function TextProcessor({ processService }: TextProcessorProps) {
             value={inputText}
             onChangeText={setInputText}
             placeholderTextColor={Colors.light.icon}
-            onSubmitEditing={() => processText(inputText)}
+            onSubmitEditing={() => !isProcessing && processText(inputText)}
             returnKeyType="send"
-            editable={!isProcessing}
+            submitBehavior='submit'
+            blurOnSubmit={false}
             autoFocus
           />
         </View>
@@ -1224,6 +1321,62 @@ export const Colors = {
 // NOTE: This file should not be edited and should be in your git ignore
 ```
 
+# hooks/useApiKey.ts
+
+```ts
+import { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const API_KEY_STORAGE_KEY = '@TalkBack:apiKey';
+
+export function useApiKey() {
+  const [apiKey, setApiKey] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    loadApiKey();
+  }, []);
+
+  const loadApiKey = async () => {
+    try {
+      const storedApiKey = await AsyncStorage.getItem(API_KEY_STORAGE_KEY);
+      setApiKey(storedApiKey);
+    } catch (error) {
+      console.error('Error loading API key:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const saveApiKey = async (newApiKey: string) => {
+    try {
+      await AsyncStorage.setItem(API_KEY_STORAGE_KEY, newApiKey);
+      setApiKey(newApiKey);
+    } catch (error) {
+      console.error('Error saving API key:', error);
+      throw error;
+    }
+  };
+
+  const clearApiKey = async () => {
+    try {
+      await AsyncStorage.removeItem(API_KEY_STORAGE_KEY);
+      setApiKey(null);
+    } catch (error) {
+      console.error('Error clearing API key:', error);
+      throw error;
+    }
+  };
+
+  return {
+    apiKey,
+    isLoading,
+    saveApiKey,
+    clearApiKey,
+  };
+}
+```
+
 # hooks/useColorScheme.ts
 
 ```ts
@@ -1329,7 +1482,8 @@ export function useThemeColor(
     "react-native-safe-area-context": "4.12.0",
     "react-native-screens": "~4.1.0",
     "react-native-web": "~0.19.13",
-    "react-native-webview": "13.12.2"
+    "react-native-webview": "13.12.2",
+    "@react-native-async-storage/async-storage": "1.23.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -1641,5 +1795,34 @@ export abstract class TextProcessBase {
   ]
 }
 
+```
+
+# utils/apiKeyValidator.ts
+
+```ts
+import Anthropic from '@anthropic-ai/sdk';
+
+export async function validateAnthropicApiKey(apiKey: string): Promise<boolean> {
+  try {
+    const client = new Anthropic({
+      apiKey,
+      dangerouslyAllowBrowser: true
+    });
+
+    // Make a minimal request to test the API key
+    await client.messages.create({
+      model: "claude-3-sonnet-20240229",
+      max_tokens: 1,
+      messages: [{ role: "user", content: "test" }]
+    });
+
+    return true;
+  } catch (error) {
+    if (error.status === 401) {
+      throw new Error('Invalid API key. Please check your key and try again.');
+    }
+    throw new Error('Error validating API key. Please try again.');
+  }
+}
 ```
 
