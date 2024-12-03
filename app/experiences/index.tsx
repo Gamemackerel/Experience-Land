@@ -27,6 +27,14 @@ export default function Explore() {
             </ThemedView>
           </TouchableOpacity>
         </Link>
+        <Link href="./experiences/aichamber" asChild>
+          <TouchableOpacity style={styles.processorLink}>
+            <IconSymbol name="chevron.right" size={24} color="#687076" />
+            <ThemedView style={styles.processorContent}>
+              <ThemedText>AI CHAMBER</ThemedText>
+            </ThemedView>
+          </TouchableOpacity>
+        </Link>
       </ThemedView>
 
       {/* ... other sections ... */}

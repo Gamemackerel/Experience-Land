@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { TextInput, ScrollView, View, StyleSheet } from 'react-native';
+import { TextInput, ScrollView, View, StyleSheet, ActivityIndicator } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedTextBox } from './ThemedTextBox';
 import { ThemedView } from './ThemedView';
@@ -14,21 +14,17 @@ interface TextProcessorProps {
 export function TextProcessor({ processService }: TextProcessorProps) {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState<string[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
   const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    // Focus on mount
     const focusInput = () => {
       inputRef.current?.focus();
     };
 
-    // Initial focus
     focusInput();
-
-    // Set up an interval to check and restore focus
     const focusInterval = setInterval(focusInput, 1000);
 
-    // Do an initial text output
     const result = processService.initialOutput();
     setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
 
@@ -37,16 +33,24 @@ export function TextProcessor({ processService }: TextProcessorProps) {
     };
   }, []);
 
-  const processText = useCallback((text: string) => {
+  const processText = useCallback(async (text: string) => {
     if (text.trim()) {
-      const result = processService.processText(text);
-      setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
-      setInputText('');
-
-      // Ensure focus after processing
-      requestAnimationFrame(() => {
-        inputRef.current?.focus();
-      });
+      setIsProcessing(true);
+      try {
+        const result = await Promise.resolve(processService.processText(text));
+        setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
+        setInputText('');
+      } catch (error) {
+        setOutputText(prev => [
+          ...prev,
+          `[${new Date().toLocaleTimeString()}] Error: ${error.message}`,
+        ]);
+      } finally {
+        setIsProcessing(false);
+        requestAnimationFrame(() => {
+          inputRef.current?.focus();
+        });
+      }
     }
   }, []);
 
@@ -64,12 +68,16 @@ export function TextProcessor({ processService }: TextProcessorProps) {
       </ScrollView>
       <View style={styles.inputContainer}>
         <View style={styles.inputWrapper}>
-          <IconSymbol
-            name="chevron.right"
-            size={20}
-            color={Colors.light.text}
-            style={styles.chevron}
-          />
+          {isProcessing ? (
+            <ActivityIndicator size="small" color={Colors.light.text} />
+          ) : (
+            <IconSymbol
+              name="chevron.right"
+              size={20}
+              color={Colors.light.text}
+              style={styles.chevron}
+            />
+          )}
           <ThemedTextBox
             ref={inputRef}
             style={styles.input}
@@ -78,6 +86,7 @@ export function TextProcessor({ processService }: TextProcessorProps) {
             placeholderTextColor={Colors.light.icon}
             onSubmitEditing={() => processText(inputText)}
             returnKeyType="send"
+            editable={!isProcessing}
             autoFocus
           />
         </View>

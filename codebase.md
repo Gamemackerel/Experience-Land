@@ -40,9 +40,9 @@ export * from 'expo-router';
 declare module 'expo-router' {
   export namespace ExpoRouter {
     export interface __routes<T extends string | object = string> {
-      hrefInputParams: { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/`; params?: Router.UnknownInputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `/experiences/double`; params?: Router.UnknownInputParams; } | { pathname: `/experiences/reverse`; params?: Router.UnknownInputParams; } | { pathname: `/experiences`; params?: Router.UnknownInputParams; } | { pathname: `/+not-found`, params: Router.UnknownInputParams & {  } };
-      hrefOutputParams: { pathname: Router.RelativePathString, params?: Router.UnknownOutputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownOutputParams } | { pathname: `/`; params?: Router.UnknownOutputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownOutputParams; } | { pathname: `/experiences/double`; params?: Router.UnknownOutputParams; } | { pathname: `/experiences/reverse`; params?: Router.UnknownOutputParams; } | { pathname: `/experiences`; params?: Router.UnknownOutputParams; } | { pathname: `/+not-found`, params: Router.UnknownOutputParams & {  } };
-      href: Router.RelativePathString | Router.ExternalPathString | `/${`?${string}` | `#${string}` | ''}` | `/_sitemap${`?${string}` | `#${string}` | ''}` | `/experiences/double${`?${string}` | `#${string}` | ''}` | `/experiences/reverse${`?${string}` | `#${string}` | ''}` | `/experiences${`?${string}` | `#${string}` | ''}` | { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/`; params?: Router.UnknownInputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `/experiences/double`; params?: Router.UnknownInputParams; } | { pathname: `/experiences/reverse`; params?: Router.UnknownInputParams; } | { pathname: `/experiences`; params?: Router.UnknownInputParams; } | `/+not-found` | { pathname: `/+not-found`, params: Router.UnknownInputParams & {  } };
+      hrefInputParams: { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/`; params?: Router.UnknownInputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `/experiences/aichamber`; params?: Router.UnknownInputParams; } | { pathname: `/experiences/double`; params?: Router.UnknownInputParams; } | { pathname: `/experiences`; params?: Router.UnknownInputParams; } | { pathname: `/experiences/reverse`; params?: Router.UnknownInputParams; } | { pathname: `/+not-found`, params: Router.UnknownInputParams & {  } };
+      hrefOutputParams: { pathname: Router.RelativePathString, params?: Router.UnknownOutputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownOutputParams } | { pathname: `/`; params?: Router.UnknownOutputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownOutputParams; } | { pathname: `/experiences/aichamber`; params?: Router.UnknownOutputParams; } | { pathname: `/experiences/double`; params?: Router.UnknownOutputParams; } | { pathname: `/experiences`; params?: Router.UnknownOutputParams; } | { pathname: `/experiences/reverse`; params?: Router.UnknownOutputParams; } | { pathname: `/+not-found`, params: Router.UnknownOutputParams & {  } };
+      href: Router.RelativePathString | Router.ExternalPathString | `/${`?${string}` | `#${string}` | ''}` | `/_sitemap${`?${string}` | `#${string}` | ''}` | `/experiences/aichamber${`?${string}` | `#${string}` | ''}` | `/experiences/double${`?${string}` | `#${string}` | ''}` | `/experiences${`?${string}` | `#${string}` | ''}` | `/experiences/reverse${`?${string}` | `#${string}` | ''}` | { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/`; params?: Router.UnknownInputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `/experiences/aichamber`; params?: Router.UnknownInputParams; } | { pathname: `/experiences/double`; params?: Router.UnknownInputParams; } | { pathname: `/experiences`; params?: Router.UnknownInputParams; } | { pathname: `/experiences/reverse`; params?: Router.UnknownInputParams; } | `/+not-found` | { pathname: `/+not-found`, params: Router.UnknownInputParams & {  } };
     }
   }
 }
@@ -96,7 +96,6 @@ yarn-error.*
 # development
 app-example
 .aidigest
-
 
 ```
 
@@ -156,9 +155,11 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { Platform, View } from 'react-native';
+import { Platform, View, SafeAreaView } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { CRTEffect } from '@/components/CRTEffect';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -180,34 +181,40 @@ export default function RootLayout() {
   }
 
   return (
-    // Wrap the entire app in a View with background color
-    <View style={{ flex: 1, backgroundColor: Colors.light.background }}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: Colors.light.background,
-            },
-            headerTintColor: Colors.light.text,
-            headerTitleStyle: {
-              fontFamily: Platform.select({
-                ios: 'Menlo',
-                android: 'monospace',
-                default: 'Courier New'
-              }),
-            },
-            // Add this to ensure consistent background color
-            contentStyle: {
-              backgroundColor: Colors.light.background,
-            },
-          }}>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="experiences/index" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
-    </View>
+    <GestureHandlerRootView>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
+        <StatusBar
+          style="light"
+          backgroundColor={Colors.light.background}
+          translucent={false}
+        />
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <CRTEffect>
+            <Stack
+              screenOptions={{
+                headerStyle: {
+                  backgroundColor: Colors.light.background,
+                },
+                headerTintColor: Colors.light.text,
+                headerTitleStyle: {
+                  fontFamily: Platform.select({
+                    ios: 'Monaco',
+                    android: 'monospace',
+                    default: 'Courier New'
+                  }),
+                },
+                contentStyle: {
+                  backgroundColor: Colors.light.background,
+                },
+              }}>
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen name="experiences/index" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </CRTEffect>
+        </ThemeProvider>
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
 ```
@@ -248,6 +255,42 @@ const styles = StyleSheet.create({
   },
 });
 
+```
+
+# app/experiences/aichamber.tsx
+
+```tsx
+import { StyleSheet } from 'react-native';
+import { TextProcessor } from '@/components/TextProcessor';
+import { ThemedView } from '@/components/ThemedView';
+import { AnthropicProcessor } from '@/services/textProcessingServices/aichamber';
+import { useLayoutEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+
+export default function AnthropicProcessorScreen() {
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'AI Chamber',
+    });
+  }, [navigation]);
+
+  return (
+    <ThemedView style={styles.container}>
+      <TextProcessor
+        processService={new AnthropicProcessor(process.env.EXPO_PUBLIC_ANTHROPIC_API_KEY || '')}
+      />
+    </ThemedView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+});
 ```
 
 # app/experiences/double.tsx
@@ -322,6 +365,14 @@ export default function Explore() {
             <IconSymbol name="chevron.right" size={24} color="#687076" />
             <ThemedView style={styles.processorContent}>
               <ThemedText>DOUBLE OR NOTHING</ThemedText>
+            </ThemedView>
+          </TouchableOpacity>
+        </Link>
+        <Link href="./experiences/aichamber" asChild>
+          <TouchableOpacity style={styles.processorLink}>
+            <IconSymbol name="chevron.right" size={24} color="#687076" />
+            <ThemedView style={styles.processorContent}>
+              <ThemedText>AI CHAMBER</ThemedText>
             </ThemedView>
           </TouchableOpacity>
         </Link>
@@ -416,8 +467,6 @@ const styles = StyleSheet.create({
 # app/index.tsx
 
 ```tsx
-// app/(tabs)/index.tsx
-
 import { StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Link } from 'expo-router';
 
@@ -434,7 +483,7 @@ export default function HomeScreen() {
       </ThemedView>
 
       <ThemedView style={styles.section}>
-        <ThemedText >This is a special place where you can travel into and explore other worlds and perspectives.</ThemedText>
+        <ThemedText >This is a special place where you can travel to other worlds and explore new perspectives.</ThemedText>
       </ThemedView>
 
       <ThemedView style={styles.section}>
@@ -574,11 +623,134 @@ it(`renders correctly`, () => {
 
 ```
 
+# components/CRTEffect.tsx
+
+```tsx
+import React, { useEffect, useCallback } from 'react';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+  withSequence,
+  Easing,
+} from 'react-native-reanimated';
+import { BlurView } from 'expo-blur';
+
+const { width, height } = Dimensions.get('window');
+
+interface CRTEffectProps {
+  children: React.ReactNode;
+}
+
+export const CRTEffect: React.FC<CRTEffectProps> = ({ children }) => {
+  const scanline = useSharedValue(0);
+  const flicker = useSharedValue(0);
+
+  // Create flicker animation function
+  const startFlickerAnimation = useCallback(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const animate = () => {
+      // Create a quick flash effect
+      flicker.value = withSequence(
+        withTiming(0.3, { duration: 50 }), // Flash on
+        withTiming(0, { duration: 50 }), // Flash off
+      );
+
+      // Schedule next flicker
+      timeoutId = setTimeout(animate, 2000 + Math.random() * 4000);
+    };
+
+    // Start the animation
+    animate();
+
+    // Return cleanup function
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    // Start scanline animation
+    scanline.value = withRepeat(
+      withTiming(height, {
+        duration: 8000,
+        easing: Easing.linear,
+      }),
+      -1,
+      false
+    );
+
+    // Start flicker animation and get cleanup function
+    const cleanupFlicker = startFlickerAnimation();
+
+    // Cleanup both animations on unmount
+    return () => {
+      cleanupFlicker();
+      scanline.value = 0;
+      flicker.value = 0;
+    };
+  }, []);
+
+  const scanlineStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: scanline.value }],
+  }));
+
+  const flickerStyle = useAnimatedStyle(() => ({
+    opacity: flicker.value,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dark overlay for the flicker
+  }));
+
+  return (
+    <Animated.View style={styles.container}>
+      {children}
+      {/* <BlurView intensity={3} style={StyleSheet.absoluteFill} tint="dark" pointerEvents="none"/>  THIS is too slow and doesn't work on android */}
+      <Animated.View
+        style={[styles.scanline, scanlineStyle]}
+        pointerEvents="none"
+      />
+      <Animated.View
+        style={[styles.overlay, flickerStyle]}
+        pointerEvents="none"
+      />
+    </Animated.View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    overflow: 'hidden',
+  },
+  scanline: {
+    position: 'absolute',
+    width: width,
+    height: 2,
+    backgroundColor: 'rgba(0, 255, 0, 0.1)',
+    top: 0,
+    left: 0,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'transparent',
+  },
+});
+```
+
 # components/TextProcessor.tsx
 
 ```tsx
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { TextInput, ScrollView, View, StyleSheet } from 'react-native';
+import { TextInput, ScrollView, View, StyleSheet, ActivityIndicator } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedTextBox } from './ThemedTextBox';
 import { ThemedView } from './ThemedView';
@@ -593,21 +765,17 @@ interface TextProcessorProps {
 export function TextProcessor({ processService }: TextProcessorProps) {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState<string[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
   const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    // Focus on mount
     const focusInput = () => {
       inputRef.current?.focus();
     };
 
-    // Initial focus
     focusInput();
-
-    // Set up an interval to check and restore focus
     const focusInterval = setInterval(focusInput, 1000);
 
-    // Do an initial text output
     const result = processService.initialOutput();
     setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
 
@@ -616,16 +784,24 @@ export function TextProcessor({ processService }: TextProcessorProps) {
     };
   }, []);
 
-  const processText = useCallback((text: string) => {
+  const processText = useCallback(async (text: string) => {
     if (text.trim()) {
-      const result = processService.processText(text);
-      setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
-      setInputText('');
-
-      // Ensure focus after processing
-      requestAnimationFrame(() => {
-        inputRef.current?.focus();
-      });
+      setIsProcessing(true);
+      try {
+        const result = await Promise.resolve(processService.processText(text));
+        setOutputText(prev => [...prev, `[${result.timestamp}] ${result.processedText}`]);
+        setInputText('');
+      } catch (error) {
+        setOutputText(prev => [
+          ...prev,
+          `[${new Date().toLocaleTimeString()}] Error: ${error.message}`,
+        ]);
+      } finally {
+        setIsProcessing(false);
+        requestAnimationFrame(() => {
+          inputRef.current?.focus();
+        });
+      }
     }
   }, []);
 
@@ -643,12 +819,16 @@ export function TextProcessor({ processService }: TextProcessorProps) {
       </ScrollView>
       <View style={styles.inputContainer}>
         <View style={styles.inputWrapper}>
-          <IconSymbol
-            name="chevron.right"
-            size={20}
-            color={Colors.light.text}
-            style={styles.chevron}
-          />
+          {isProcessing ? (
+            <ActivityIndicator size="small" color={Colors.light.text} />
+          ) : (
+            <IconSymbol
+              name="chevron.right"
+              size={20}
+              color={Colors.light.text}
+              style={styles.chevron}
+            />
+          )}
           <ThemedTextBox
             ref={inputRef}
             style={styles.input}
@@ -657,6 +837,7 @@ export function TextProcessor({ processService }: TextProcessorProps) {
             placeholderTextColor={Colors.light.icon}
             onSubmitEditing={() => processText(inputText)}
             returnKeyType="send"
+            editable={!isProcessing}
             autoFocus
           />
         </View>
@@ -967,7 +1148,30 @@ export const TerminalStyles = {
         android: 'monospace',
         default: 'Courier New'
       }),
-      letterSpacing: 0.5,
+      letterSpacing: 0.7, // Increased letter spacing
+      textShadow: Platform.select({
+        web: `
+          0.4px 0.4px 0 #00FF00,
+          -0.4px -0.4px 0 #00FF00,
+          0px 0.4px 0 #00FF00,
+          0 -0.4px 0 #00FF00
+        `,
+        default: undefined
+      }),
+      // For native platforms, we'll use multiple text shadow properties
+      ...Platform.select({
+        ios: {
+          textShadowColor: '#00FF00',
+          textShadowOffset: { width: 0.4, height: 0.4 },
+          textShadowRadius: 0.4,
+        },
+        android: {
+          textShadowColor: '#00FF00',
+          textShadowOffset: { width: 0.4, height: 0.4 },
+          textShadowRadius: 0.4,
+        },
+        default: {}
+      })
     },
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,
@@ -1101,6 +1305,7 @@ export function useThemeColor(
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/bottom-tabs": "^7.0.0",
     "@react-navigation/native": "^7.0.0",
@@ -1287,6 +1492,52 @@ moveDirectories();
 
 ```
 
+# services/textProcessingServices/aichamber.ts
+
+```ts
+import { TextProcessingResult, TextProcessBase } from "./textProcessBase";
+import Anthropic from '@anthropic-ai/sdk';
+
+export class AnthropicProcessor extends TextProcessBase {
+  private client: Anthropic;
+
+  constructor(apiKey: string) {
+    super(apiKey);
+    this.client = new Anthropic({
+      apiKey: this.apiKey,
+      dangerouslyAllowBrowser: true
+    });
+  }
+
+  async processText(text: string): Promise<TextProcessingResult> {
+    try {
+      const response = await this.client.messages.create({
+        model: "claude-3-sonnet-20240229",
+        max_tokens: 1024,
+        messages: [{ role: "user", content: text }]
+      });
+
+      return {
+        processedText: response.content[0].text,
+        timestamp: new Date().toLocaleTimeString()
+      };
+    } catch (error) {
+      return {
+        processedText: `Error processing text: ${error.message}`,
+        timestamp: new Date().toLocaleTimeString()
+      };
+    }
+  }
+
+  initialOutput(): TextProcessingResult {
+    return {
+      processedText: "You've entered the AI Chamber. Here, your words will be processed by Claude, an AI assistant. What would you like to discuss?",
+      timestamp: new Date().toLocaleTimeString()
+    };
+  }
+}
+```
+
 # services/textProcessingServices/doubler.ts
 
 ```ts
@@ -1347,27 +1598,26 @@ export class Reverser extends TextProcessBase {
 
 ```ts
 export interface TextProcessingResult {
-    processedText: string;
-    timestamp: string;
+  processedText: string;
+  timestamp: string;
+}
+
+export abstract class TextProcessBase {
+  protected apiKey: string;
+
+  constructor(apiKey: string) {
+    this.apiKey = apiKey;
   }
 
-  export abstract class TextProcessBase {
+  /**
+   * Processes input text and returns a result
+   * @param text The input text to process
+   * @returns Promise<TextProcessingResult> containing the processed text and timestamp
+   */
+  abstract processText(text: string): Promise<TextProcessingResult> | TextProcessingResult;
 
-    protected apiKey: string;
-
-    constructor(apiKey: string) {
-        this.apiKey = apiKey;
-    }
-
-    /**
-     * Processes input text by reversing it and adding a timestamp
-     * @param text The input text to process
-     * @returns ProcessingResult containing the reversed text and timestamp
-     */
-    abstract processText(text: string): TextProcessingResult;
-
-    abstract initialOutput(): TextProcessingResult;
-  }
+  abstract initialOutput(): TextProcessingResult;
+}
 ```
 
 # tsconfig.json

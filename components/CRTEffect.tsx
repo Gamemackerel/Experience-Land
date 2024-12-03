@@ -20,7 +20,7 @@ export const CRTEffect: React.FC<CRTEffectProps> = ({ children }) => {
   const scanline = useSharedValue(0);
   const flicker = useSharedValue(0);
 
-  // Create flicker animation function with proper cleanup
+  // Create flicker animation function
   const startFlickerAnimation = useCallback(() => {
     let timeoutId: NodeJS.Timeout;
 
@@ -80,7 +80,7 @@ export const CRTEffect: React.FC<CRTEffectProps> = ({ children }) => {
   return (
     <Animated.View style={styles.container}>
       {children}
-      <BlurView intensity={3} style={StyleSheet.absoluteFill} tint="dark" pointerEvents="none"/>
+      {/* <BlurView intensity={3} style={StyleSheet.absoluteFill} tint="dark" pointerEvents="none"/>  THIS is too slow and doesn't work on android */}
       <Animated.View
         style={[styles.scanline, scanlineStyle]}
         pointerEvents="none"
