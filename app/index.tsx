@@ -1,5 +1,3 @@
-// app/(tabs)/index.tsx
-
 import { StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Link } from 'expo-router';
 
@@ -16,7 +14,7 @@ export default function HomeScreen() {
       </ThemedView>
 
       <ThemedView style={styles.section}>
-        <ThemedText >This is a special place where you can travel into and explore other worlds and perspectives.</ThemedText>
+        <ThemedText >This is a special place where you can travel to other worlds and explore new perspectives.</ThemedText>
       </ThemedView>
 
       <ThemedView style={styles.section}>
