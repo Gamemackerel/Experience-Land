@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { Platform, View } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { CRTEffect } from '@/components/CRTEffect';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -28,32 +29,32 @@ export default function RootLayout() {
   }
 
   return (
-    // Wrap the entire app in a View with background color
     <View style={{ flex: 1, backgroundColor: Colors.light.background }}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: Colors.light.background,
-            },
-            headerTintColor: Colors.light.text,
-            headerTitleStyle: {
-              fontFamily: Platform.select({
-                ios: 'Menlo',
-                android: 'monospace',
-                default: 'Courier New'
-              }),
-            },
-            // Add this to ensure consistent background color
-            contentStyle: {
-              backgroundColor: Colors.light.background,
-            },
-          }}>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="experiences/index" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
+        <CRTEffect>
+          <Stack
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: Colors.light.background,
+              },
+              headerTintColor: Colors.light.text,
+              headerTitleStyle: {
+                fontFamily: Platform.select({
+                  ios: 'Menlo',
+                  android: 'monospace',
+                  default: 'Courier New'
+                }),
+              },
+              contentStyle: {
+                backgroundColor: Colors.light.background,
+              },
+            }}>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="experiences/index" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </CRTEffect>
       </ThemeProvider>
     </View>
   );

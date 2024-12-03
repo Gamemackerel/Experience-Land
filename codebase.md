@@ -156,12 +156,9 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import 'react-native-reanimated';
-import { Platform } from 'react-native';
-
-import ReverseProcessorScreen from './experiences/reverse';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Platform, View } from 'react-native';
 import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -183,30 +180,36 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: Colors.light.background,  // Terminal black background
-        },
-        headerTintColor: Colors.light.text,   // Terminal green text
-        headerTitleStyle: {
-          fontFamily: Platform.select({
-            ios: 'Menlo',
-            android: 'monospace',
-            default: 'Courier New'
-          }),
-        },
-      }}>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="experiences/index" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    // Wrap the entire app in a View with background color
+    <View style={{ flex: 1, backgroundColor: Colors.light.background }}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: Colors.light.background,
+            },
+            headerTintColor: Colors.light.text,
+            headerTitleStyle: {
+              fontFamily: Platform.select({
+                ios: 'Menlo',
+                android: 'monospace',
+                default: 'Courier New'
+              }),
+            },
+            // Add this to ensure consistent background color
+            contentStyle: {
+              backgroundColor: Colors.light.background,
+            },
+          }}>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="experiences/index" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </View>
   );
 }
-
 ```
 
 # app/+not-found.tsx
@@ -952,46 +955,6 @@ export function IconSymbol({
 
 ```
 
-# components/ui/TabBarBackground.ios.tsx
-
-```tsx
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { BlurView } from 'expo-blur';
-import { StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-export default function BlurTabBarBackground() {
-  return (
-    <BlurView
-      // System chrome material automatically adapts to the system's theme
-      // and matches the native tab bar appearance on iOS.
-      tint="systemChromeMaterial"
-      intensity={100}
-      style={StyleSheet.absoluteFill}
-    />
-  );
-}
-
-export function useBottomTabOverflow() {
-  const tabHeight = useBottomTabBarHeight();
-  const { bottom } = useSafeAreaInsets();
-  return tabHeight - bottom;
-}
-
-```
-
-# components/ui/TabBarBackground.tsx
-
-```tsx
-// This is a shim for web and Android where the tab bar is generally opaque.
-export default undefined;
-
-export function useBottomTabOverflow() {
-  return 0;
-}
-
-```
-
 # constants/AppStyles.ts
 
 ```ts
@@ -1016,11 +979,8 @@ export const TerminalStyles = {
 # constants/Colors.ts
 
 ```ts
-// constants/Colors.ts
-
 const terminalGreen = '#00FF00';
 const dimTerminalGreen = '#00B800';
-const terminalBackground = '#001100';
 const terminalBlack = '#000800';
 
 export const Colors = {
@@ -1029,9 +989,6 @@ export const Colors = {
     background: terminalBlack,
     tint: terminalGreen,
     icon: dimTerminalGreen,
-    tabIconDefault: dimTerminalGreen,
-    tabIconSelected: terminalGreen,
-    // Terminal specific colors
     terminal: {
       cursor: terminalGreen,
       selection: '#003300',
@@ -1040,13 +997,10 @@ export const Colors = {
     }
   },
   dark: {
-    // We'll use the same colors for both themes to maintain the terminal look
     text: terminalGreen,
     background: terminalBlack,
     tint: terminalGreen,
     icon: dimTerminalGreen,
-    tabIconDefault: dimTerminalGreen,
-    tabIconSelected: terminalGreen,
     terminal: {
       cursor: terminalGreen,
       selection: '#003300',
