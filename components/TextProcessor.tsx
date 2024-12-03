@@ -19,7 +19,7 @@ export function TextProcessor({ processService }: TextProcessorProps) {
 
   useEffect(() => {
     const result = processService.initialOutput();
-    setOutputText(prev => [...prev, `* ${result.processedText}`]);
+    setOutputText(_ => [`${result.processedText}`]);
   }, []);
 
   const processText = useCallback(async (text: string) => {
@@ -28,11 +28,11 @@ export function TextProcessor({ processService }: TextProcessorProps) {
       setInputText('');
       try {
         const result = await Promise.resolve(processService.processText(text, outputText));
-        setOutputText(prev => [...prev, `* ${result.processedText}`]);
+        setOutputText(prev => [...prev, `${result.processedText}`]);
       } catch (error) {
         setOutputText(prev => [
           ...prev,
-          `* Error: ${error.message}`,
+          `ERROR: ${error.message}`,
         ]);
       } finally {
         setIsProcessing(false);

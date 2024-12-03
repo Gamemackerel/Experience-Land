@@ -7,7 +7,7 @@ export class Zork extends TextProcessBase {
   private narrative: string;
   private start: string;
   private rules: string;
-  private map: { [key: string]: { description: string, navigable: string[] } };
+  private map: { [key: string]: { description: string, navigable: string[], visited: boolean } };
 
   constructor(apiKey: string) {
     super(apiKey);
@@ -32,24 +32,31 @@ export class Zork extends TextProcessBase {
 
     this.map = {
       '<ENTRANCE>': {
-        description: 'You are at the entrance of an ancient temple. The stone walls are covered in mysterious glyphs, and the air is thick with anticipation.',
+        description: 'You are at the entrance of an ancient temple. The stone walls are covered in mysterious glyphs, and the air is thick with anticipation. Down the dark hall in front of you, you can see it opens into a large antechamber.',
         navigable: ['<ANTECHAMBER>'],
+        visited: true
       },
       '<ANTECHAMBER>': {
-        description: 'You are in a large room down the hall in front of you. It contains 3 doors to navigable locations. ROOM 1 is to the east, ROOM 2 is to the west, and ROOM 3 is to the north. The temple ENTRANCE is to the south.',
+        description: 'You are in a large room with pillar columns of stone engraved with runes. It is dark, cold, and silent aside from a dripping noise. The entrance archway is to the south, and then there are 3 doors. ROOM 1 is to the east, ROOM 2 is to the west, and ROOM 3 is to the north.',
         navigable: ['<ENTRANCE>', '<ROOM 1>', '<ROOM 2>', '<ROOM 3>'],
+        visited: false
       },
       '<ROOM 1>': {
-          description: 'a small room, with a painting on the wall. A painting of a goblin in a cave, with a sign that reads: "I am a goblin in a cave. Say these words and see the truth.". The phrase and where it was found are added to the player knowledge. If the player says the words in this room, nothing happens.',
+          description: 'a small room, with a painting on the wall. A painting of a goblin in a cave is here, with a sign that reads: "I am a goblin in a cave. Say these words and see the truth.". The phrase and where it was found are added to the player knowledge. If the player says the words in this room, nothing happens.',
           navigable: ['<ANTECHAMBER>', '<ROOM 2> through <ANTECHAMBER>', '<ROOM 3> through <ANTECHAMBER>'],
+          visited: false
       },
       '<ROOM 2>': {
         description: `a small room, with a mirror on the wall. If the player looks into the mirror and
         says the words "I am a goblin in a cave" which they learned in the other room, the mirror fragment into a million shards,
         and a hallway is left behind to the treasure room. THIS IS ONLY POSSIBLE IF THAT PHRASE IS IN THE PLAYER KNOWLEDGE.
         DO NOT HINT AT THIS.
-        If that happens, the player is congratulated for finding the treasure and the game is over. No more interaction is possible.`
-        , navigable: ['<ANTECHAMBER>', '<ROOM 1> through <ANTECHAMBER>', '<ROOM 3> through <ANTECHAMBER>']
+        If that happens, the player is congratulated for finding the treasure and the game is over. No more interaction is possible.
+
+        If the player specifically says that they look extremely hard at the mirror, they will notice that their face looks slightly different, contorted by the old glass.
+        `
+        , navigable: ['<ANTECHAMBER>', '<ROOM 1> through <ANTECHAMBER>', '<ROOM 3> through <ANTECHAMBER>'],
+        visited: false
       },
       '<ROOM 3>': {
         description: `a small room with a goblin in the corner, who, IF STILL ALIVE, attacks when you enter.
@@ -58,40 +65,19 @@ export class Zork extends TextProcessBase {
         Be sure to update the state of the goblin.
         If the player is hit 3 times, they are killed, the game is over and no more interaction is possible.
         The health potion can be used to restore 2 hp.`,
-        navigable: ['<ANTECHAMBER>', '<ROOM 2> through <ANTECHAMBER>', '<ROOM 1> through <ANTECHAMBER>']
+        navigable: ['<ANTECHAMBER>', '<ROOM 2> through <ANTECHAMBER>', '<ROOM 1> through <ANTECHAMBER>'],
+        visited: false
       }
     };
 
     this.narrative = `
     The player is a human adventurer capable of mildly athletic feats and some combat ability.
-
-    The player starts in the <ENTRANCE> of a large temple.
-    There is a large room down the hall in front of them (the <ANTECHAMBER>). It contains 3 doors to navigable locations.
-
-    to the east is <ROOM 1>:
-    a small room, with a painting on the wall.
-    A painting of a goblin in a cave, with a sign that reads:
-    "I am a goblin in a cave. Say these words and see the truth."
-    If you say the words in this room, nothing happens.
-
-    to the west is <ROOM 2>:
-    a small room, with a mirror on the wall. If the player looks into the mirror and
-    says the words "I am a goblin in a cave" which they learned in the other room, the mirror fragment into a million shards,
-    and a hallway is left behind to the treasure room.
-    The player is congratulated for finding the treasure and the game is over. No more interaction is possible.
-
-    to the north is <ROOM 3>:
-    a small room with a goblin. IF STILL ALIVE, attacks when you enter. otherwise it is lifeless.
-    In order to fight the goblin, the player is allowed one action per turn.
-    If the player hits the goblin 3 times, the goblin is killed, and the player can continue.
-    Be sure to update the state of the goblin.
-    If the player is hit 3 times, they are killed, the game is over and no more interaction is possible.
-    The health potion can be used to restore 2 hp.
+    They have heard there is treasure and danger in this temple.
     `;
 
-    this.start = `
-    You are at the entrance of an ancient temple. The stone walls are covered in mysterious glyphs, and the air is thick with anticipation.
-    Down the dark hall in front of you, you can see it opens into a large antechamber.
+    this.start = `You are at the entrance of an ancient temple. You possess a sword, sheild, and a small health potion. The stone walls are covered in mysterious glyphs, and the air is thick with anticipation.
+
+Down the dark hall in front of you, you can see it opens into a large antechamber.
     `;
 
     this.rules = `The user cannot:
@@ -101,6 +87,11 @@ export class Zork extends TextProcessBase {
             (i.e. talk to someone who is not in the same place as them,
                 navigate somewhere that cannot be reached)
         4. Travel to locations or talk to people that are not described in the narrative
+
+        The user is allowed to:
+        1. Request actions for the player to perform, even if they don't have a reason to do so
+        2. Request information about the world if it can be converted to "looking" or "listening" or "talking with characters" actions
+            ie. "whats in my inventory?" -> "look in my inventory and see what I have"
     `;
   }
 
@@ -114,7 +105,8 @@ export class Zork extends TextProcessBase {
             role: "user",
             content: `You are a request parser and referee for a text adventure game.
             Parse user input into a sequence of actions, where the player is the subject. Speaking counts as an action.
-            If the input breaks the rules, say "ERROR" and return an error message describing the issue.
+            If the input breaks the rules, try to correct the action to fit the rules. i.e. "kill the goblin" should be "strike at the goblin" and "break the wall with my sword" should be "attempt to break the wall by swinging at it".
+            If the input cannot be cast to a valid action, return "ERROR" and a description of the issue.
 
             If the game is over, either with a win or a loss, no more interaction is allowed.
 
@@ -140,7 +132,7 @@ export class Zork extends TextProcessBase {
   }
 
 
-  private async gameMaster(action: string, lastOutput: string): Promise<{ newlocation: string, changes: string}> {
+  private async gameMaster(action: string, lastOutput: string): Promise<{ currentLocationName: string, changes: string}> {
     const messagesForGameMaster = [
         {
           role: "user",
@@ -151,6 +143,7 @@ export class Zork extends TextProcessBase {
           In particular, the location of the player before and after the action, the inventory, health of the player and any opponents.
 
           ALWAYS use the valid locations navigable from the current one in angle brackets <> for the location of the player before and after the action.
+          If the location moved to has not been visited yet, indicate that it is a first visit. Otherwise indicate that they are returning to a room they have already visited.
 
           NEVER use any other location outside of the locations navigable from the current one.
 
@@ -159,8 +152,10 @@ export class Zork extends TextProcessBase {
           ONLY provide the changes to the game state that result from the action.
           DONT ASSUME ADDITIONAL ACTIONS BESIDES THE ONE THE USER REQUESTED.
 
-          If the player interacts with something that is not important to the narrative context, you should indicate that
-          nothing happened in response to the action. If they try to navigate to a place that is not in the narrative context,
+          If the player interacts with something that is not important to the narrative context, you can still guage what happened (if anything), but should indicate that
+          That even though they interacted with something, it was not important.
+
+          If they try to navigate to a place that is not in the narrative context,
           you should indicate that they don't feel like they want to go there.
 
           If nothing much has changed, you should say that "attempted ${action}, but nothing happened because <x>".
@@ -169,13 +164,14 @@ export class Zork extends TextProcessBase {
           When the player is in combat, the creatures will attack them as well as part of the user inflicted changes.
 
           Location: ${JSON.stringify(this.map[JSON.parse(this.currentState)['location']])}
+          First Visit here?: ${JSON.stringify(!this.map[JSON.parse(this.currentState)['location']].visited)}
           Game state: ${this.currentState}
           Last output: ${lastOutput || 'none'}
           player requested Action: ${action}
 
           The format of the result should be only a perfect and parsable JSON object with the exact following keys and no more:
           {
-            "newlocation": "<LOCATIONNAME>",
+            "currentLocationName": "<LOCATIONNAME>",
             "changes": "english language description of what happened in the world as a result of the action ("player did <action> and <result>" or "player went from <old location> to <new location>")"
           }`
 
@@ -191,13 +187,15 @@ export class Zork extends TextProcessBase {
 
       // Parse and validate the new state
       const stateChange = JSON.parse(response.content[0].text);
+      debugger;
+      this.map[stateChange['currentLocationName']].visited = true;
       return stateChange;
     } catch (error) {
-      return {newlocation: this.currentState, changes: `ERROR: ${error.message}`};
+      return {currentLocationName: this.currentState['location'], changes: `ERROR: ${error.message}`};
     }
   }
 
-  private async gameStateUpdater(stateChange: {newlocation: string, changes: string}): Promise<void> {
+  private async gameStateUpdater(stateChange: {currentLocationName: string, changes: string}): Promise<void> {
 
     const response = await this.client.messages.create({
         model: "claude-3-sonnet-20240229",
@@ -232,7 +230,7 @@ export class Zork extends TextProcessBase {
             IMMEDIATELY return the current state in perfect JSON with no other content.
 
             Narrative context: ${this.narrative}
-            New Location Overview: ${JSON.stringify(this.map[stateChange['newlocation']])}
+            New Location Overview: ${JSON.stringify(this.map[stateChange['currentLocationName']])}
             Previous Game state: ${this.currentState}
             Previous Location: ${JSON.parse(this.currentState)['location']}
             state change from previous: ${JSON.stringify(stateChange)}`
@@ -244,7 +242,7 @@ export class Zork extends TextProcessBase {
     this.currentState = newState;
   }
 
-  private async narrator(state: string, stateChange: {newlocation: string, changes: string}, lastOutput?: string): Promise<string> {
+  private async narrator(state: string, stateChange: {currentLocationName: string, changes: string}, lastOutput?: string): Promise<string> {
     try {
 
       const narratorMessages = [{
@@ -253,9 +251,11 @@ export class Zork extends TextProcessBase {
         You can hint at possible options for what the player can do next,
         but NEVER say so explicitly what the player can do next, or say the words "hinting at", "suggest", or "suggesting".
         Always refer to the player as "you", since you are telling the story to the player.
+        DO NOT ask questions of the player.
 
-        ALWAYS use the current location to describe what's around the player, and what the navigable places are! When listing places, don't use angle brackets, just the name of the place in lower case.
+        ALWAYS use the current location to describe what's around the player, and what the places they can go from here are! When listing places, don't use angle brackets, just the name of the place in lower case.
 
+        If the player has moved into an unvisited location, introduce the location and describe what's around the player.
         Don't repeat what was already said in the last output. IF THE CHANGE WAS NOT A LOCATION CHANGE, DO NOT INTRODUCE THE LOCATION.
 
         Last thing you said: ${lastOutput}
@@ -270,7 +270,7 @@ export class Zork extends TextProcessBase {
 
         VERY IMPORTANT: Don't mention ANYTHING about the game state other than what just happened, whats around, and what the navigable places are, unless it's relevant to what just happened. Do not say the health, inventory, knowedge of the player.
         NEVER mention anything that the player doesn't know about yet, like things that are behind doors they haven't opened yet.
-        VERY IMPORTANT: If nothing much has happened, or the player doesn't feel like or cannot do the thing, then just say that "nothing happened" and don't reiterate the whole state.
+
         Keep flavor text to a minimum. If something happened, try to briefly explain why and connect it to the players action.
         `
       }];
