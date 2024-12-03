@@ -24,7 +24,8 @@ export class Zork extends TextProcessBase {
         "probable_next_player_actions": ["go down the hallway to the antechamber", "look around at the entrance", "look behind at where they came from"],
         "existing_player_knowledge": [],
         "state_of_other_characters": [],
-        "state_of_objects": []
+        "state_of_objects": [],
+        "game_state": "playing"
     }
     `;
 
@@ -35,7 +36,7 @@ export class Zork extends TextProcessBase {
         navigable: ['<ANTECHAMBER>'],
       },
       '<ANTECHAMBER>': {
-        description: 'You are in a large room down the hall in front of you. It contains 3 doors to navigable locations. ROOM 1 is to the east, ROOM 2 is to the west, and ROOM 3 is to the north.',
+        description: 'You are in a large room down the hall in front of you. It contains 3 doors to navigable locations. ROOM 1 is to the east, ROOM 2 is to the west, and ROOM 3 is to the north. The temple ENTRANCE is to the south.',
         navigable: ['<ENTRANCE>', '<ROOM 1>', '<ROOM 2>', '<ROOM 3>'],
       },
       '<ROOM 1>': {
@@ -114,6 +115,8 @@ export class Zork extends TextProcessBase {
             content: `You are a request parser and referee for a text adventure game.
             Parse user input into a sequence of actions, where the player is the subject. Speaking counts as an action.
             If the input breaks the rules, say "ERROR" and return an error message describing the issue.
+
+            If the game is over, either with a win or a loss, no more interaction is allowed.
 
             The user can request around 2 actions at a time that can be performed in the world.
 
@@ -208,7 +211,7 @@ export class Zork extends TextProcessBase {
             Think carefully about what the new state of the game would be, that as closely as possible aligns
             with both the narrative context, and whats possible in the current location.
 
-            If the location has changed, always update the location of the player to the new location.
+            IF THE PLAYER MOVES FROM ONE LOCATION TO ANOTHER, ALWAYS update the location of the player to the new location in the state.
 
             If a creature dies, update the state of the creature to be dead. Do not update or remove a creature state otherwise.
 
@@ -226,7 +229,7 @@ export class Zork extends TextProcessBase {
 
             ALWAYS list all the navigable locations from the new location as possible next player actions.
 
-            ALWAYS return the current state in perfect JSON.
+            IMMEDIATELY return the current state in perfect JSON with no other content.
 
             Narrative context: ${this.narrative}
             New Location Overview: ${JSON.stringify(this.map[stateChange['newlocation']])}
