@@ -122,6 +122,7 @@ Down the dark hall in front of you, you can see it opens into a large antechambe
 
             Rules: ${this.rules}
             Narrative context: ${this.narrative}
+            Location: ${JSON.stringify(this.map[JSON.parse(this.currentState)['location']])}
             ---
             Current state: ${this.currentState}
             Last Output: ${lastOutput || 'none'}
