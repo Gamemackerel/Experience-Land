@@ -43,7 +43,7 @@ export class Zork extends TextProcessBase {
       },
       '<ROOM 1>': {
           description: 'a small room, with a painting on the wall. A painting of a goblin in a cave is here, with a sign that reads: "I am a goblin in a cave. Say these words and see the truth.". The phrase and where it was found are added to the player knowledge. If the player says the words in this room, nothing happens.',
-          navigable: ['<ANTECHAMBER>', '<ROOM 2> (through antechamber)', '<ROOM 3> (through antechamber)'],
+          navigable: ['<ANTECHAMBER>', '<ROOM 2> through <ANTECHAMBER>', '<ROOM 3> through <ANTECHAMBER>'],
           visited: false
       },
       '<ROOM 2>': {
@@ -55,7 +55,7 @@ export class Zork extends TextProcessBase {
 
         If the player specifically says that they look extremely hard at the mirror, they will notice that their face looks slightly different, contorted by the old glass.
         `
-        , navigable: ['<ANTECHAMBER>', '<ROOM 1> (through antechamber)', '<ROOM 3> (through antechamber)'],
+        , navigable: ['<ANTECHAMBER>', '<ROOM 1> through <ANTECHAMBER>', '<ROOM 3> through <ANTECHAMBER>'],
         visited: false
       },
       '<ROOM 3>': {
@@ -65,7 +65,7 @@ export class Zork extends TextProcessBase {
         Be sure to update the state of the goblin.
         If the player is hit 3 times, they are killed, the game is over and no more interaction is possible.
         The health potion can be used to restore 2 hp.`,
-        navigable: ['<ANTECHAMBER>', '<ROOM 2> (through antechamber)', '<ROOM 1> (through antechamber)'],
+        navigable: ['<ANTECHAMBER>', '<ROOM 2> through <ANTECHAMBER>', '<ROOM 1> through <ANTECHAMBER>'],
         visited: false
       },
       '<TREASURE ROOM>': {
@@ -117,6 +117,8 @@ Down the dark hall in front of you, you can see it opens into a large antechambe
 
             The user can request around 2 actions at a time that can be performed in the world.
 
+            The user can navigate to locations that are listed as navigable, including going through other rooms.
+
             Say nothing more than the specific requests for actions the user has made.
             The results of those requests will be returned later. No flavor or other text should be included in the response.
 
@@ -139,6 +141,7 @@ Down the dark hall in front of you, you can see it opens into a large antechambe
 
 
   private async gameMaster(action: string, lastOutput: string): Promise<{ currentLocationName: string, changes: string}> {
+
     const messagesForGameMaster = [
         {
           role: "user",
@@ -152,6 +155,9 @@ Down the dark hall in front of you, you can see it opens into a large antechambe
           If the location moved to has not been visited yet, indicate that it is a first visit. Otherwise indicate that they are returning to a room they have already visited.
 
           NEVER use any other location outside of the locations navigable from the current one.
+
+          IMPORTANT: The player can navigate to a location through another location if it is navigable
+          i.e. "move through <KITCHEN> to <BATHROOM>" the next current location would be <BATHROOM>.
 
           DO NOT provide a full new game state in the response. Only provide the changes to the game state that result from the action.
 
@@ -177,7 +183,7 @@ Down the dark hall in front of you, you can see it opens into a large antechambe
 
           The format of the result should be only a perfect and parsable JSON object with the exact following keys and no more:
           {
-            "currentLocationName": "<LOCATIONNAME>",
+            "currentLocationName": "<LOCATIONNAME>", (name of location after the action)
             "changes": "english language description of what happened in the world as a result of the action ("player did <action> and <result>" or "player went from <old location> to <new location>")"
           }`
 
@@ -262,7 +268,8 @@ Down the dark hall in front of you, you can see it opens into a large antechambe
         ALWAYS use the current location to describe what's around the player, and what the places they can go from here are! When listing places, don't use angle brackets, just the name of the place in lower case.
 
         If the player has moved into an unvisited location, introduce the location and describe what's around the player.
-        Don't repeat what was already said in the last output. IF THE CHANGE WAS NOT A LOCATION CHANGE, DO NOT INTRODUCE THE LOCATION.
+        Don't repeat what was already said in the last output.
+        IF WHAT JUST HAPPENED WAS NOT A LOCATION CHANGE, DO NOT INTRODUCE THE LOCATION. In other words don't say "you enter the kitchen" if the player was already in the kitchen (so the kitchen is "visited")
 
         Last thing you said: ${lastOutput}
 
