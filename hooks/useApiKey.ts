@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_KEY_STORAGE_KEY = '@TalkBack:apiKey';
+const API_KEY_STORAGE_KEY = '@Experience-Land:apiKey';
 
 export function useApiKey() {
   const [apiKey, setApiKey] = useState<string | null>(null);
