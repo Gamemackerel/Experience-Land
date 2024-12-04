@@ -67,6 +67,11 @@ export class Zork extends TextProcessBase {
         The health potion can be used to restore 2 hp.`,
         navigable: ['<ANTECHAMBER>', '<ROOM 2> through <ANTECHAMBER>', '<ROOM 1> through <ANTECHAMBER>'],
         visited: false
+      },
+      '<TREASURE ROOM>': {
+        description: 'A massive room with heaps of gold jewels, and other treasures. A golden radiance fills the room. It all belongs to you!',
+        navigable: [],
+        visited: false
       }
     };
 
