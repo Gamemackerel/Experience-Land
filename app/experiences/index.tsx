@@ -11,7 +11,7 @@ export default function Explore() {
     <ScrollView style={styles.container}>
       <ThemedView style={styles.section}>
         <ThemedText >{'Available Experiences:'}</ThemedText>
-        <Link href="./experiences/reverse" asChild>
+        {/* <Link href="./experiences/reverse" asChild>
           <TouchableOpacity style={styles.processorLink}>
             <ThemedText>{">"}</ThemedText>
             <ThemedView style={styles.processorContent}>
@@ -26,12 +26,12 @@ export default function Explore() {
               <ThemedText>DOUBLE OR NOTHING</ThemedText>
             </ThemedView>
           </TouchableOpacity>
-        </Link>
+        </Link> */}
         <Link href="./experiences/aichamber" asChild>
           <TouchableOpacity style={styles.processorLink}>
             <ThemedText>{">"}</ThemedText>
             <ThemedView style={styles.processorContent}>
-              <ThemedText>AI CHAMBER</ThemedText>
+              <ThemedText>BASIC AI CHAMBER</ThemedText>
             </ThemedView>
           </TouchableOpacity>
         </Link>

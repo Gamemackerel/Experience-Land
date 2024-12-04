@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedTextBox } from '@/components/ThemedTextBox';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useApiKey } from '@/hooks/useApiKey';
 import { Colors } from '@/constants/Colors';
