@@ -43,7 +43,7 @@ export class Zork extends TextProcessBase {
       },
       '<ROOM 1>': {
           description: 'a small room, with a painting on the wall. A painting of a goblin in a cave is here, with a sign that reads: "I am a goblin in a cave. Say these words and see the truth.". The phrase and where it was found are added to the player knowledge. If the player says the words in this room, nothing happens.',
-          navigable: ['<ANTECHAMBER>', '<ROOM 2> through <ANTECHAMBER>', '<ROOM 3> through <ANTECHAMBER>'],
+          navigable: ['<ANTECHAMBER>', '<ROOM 2> (through antechamber)', '<ROOM 3> (through antechamber)'],
           visited: false
       },
       '<ROOM 2>': {
@@ -55,7 +55,7 @@ export class Zork extends TextProcessBase {
 
         If the player specifically says that they look extremely hard at the mirror, they will notice that their face looks slightly different, contorted by the old glass.
         `
-        , navigable: ['<ANTECHAMBER>', '<ROOM 1> through <ANTECHAMBER>', '<ROOM 3> through <ANTECHAMBER>'],
+        , navigable: ['<ANTECHAMBER>', '<ROOM 1> (through antechamber)', '<ROOM 3> (through antechamber)'],
         visited: false
       },
       '<ROOM 3>': {
@@ -65,7 +65,7 @@ export class Zork extends TextProcessBase {
         Be sure to update the state of the goblin.
         If the player is hit 3 times, they are killed, the game is over and no more interaction is possible.
         The health potion can be used to restore 2 hp.`,
-        navigable: ['<ANTECHAMBER>', '<ROOM 2> through <ANTECHAMBER>', '<ROOM 1> through <ANTECHAMBER>'],
+        navigable: ['<ANTECHAMBER>', '<ROOM 2> (through antechamber)', '<ROOM 1> (through antechamber)'],
         visited: false
       },
       '<TREASURE ROOM>': {
