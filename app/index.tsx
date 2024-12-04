@@ -62,7 +62,7 @@ export default function HomeScreen() {
             {isSubmitting ? (
                 <ActivityIndicator size="small" color={Colors.light.text} />
               ) : (
-                <IconSymbol name="chevron.right" size={24} color={Colors.light.text} />
+                <ThemedText>{">"}</ThemedText>
               )}
             <ThemedTextBox
               value={inputApiKey}
@@ -94,15 +94,12 @@ export default function HomeScreen() {
           {error && (
             <ThemedText style={styles.errorText}>{error}</ThemedText>
           )}
-          <ThemedText>
-            Don't have an API key? Visit anthropic.com to get one.
-          </ThemedText>
         </ThemedView>
       ) : (
         <ThemedView style={styles.section}>
           <Link href="./experiences" asChild>
             <TouchableOpacity style={styles.processorLink}>
-              <IconSymbol name="chevron.right" size={24} color={Colors.light.text} />
+            <ThemedText>{">"}</ThemedText>
               <ThemedView style={styles.processorContent}>
                 <ThemedText>BROWSE EXPERIENCES</ThemedText>
               </ThemedView>

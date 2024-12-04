@@ -57,12 +57,7 @@ export function TextProcessor({ processService }: TextProcessorProps) {
           {isProcessing ? (
             <ActivityIndicator size="small" color={Colors.light.text} />
           ) : (
-            <IconSymbol
-              name="chevron.right"
-              size={20}
-              color={Colors.light.text}
-              style={styles.chevron}
-            />
+            <ThemedText>{">"}</ThemedText>
           )}
           <ThemedTextBox
             ref={inputRef}

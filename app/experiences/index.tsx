@@ -13,7 +13,7 @@ export default function Explore() {
         <ThemedText >{'Available Experiences:'}</ThemedText>
         <Link href="./experiences/reverse" asChild>
           <TouchableOpacity style={styles.processorLink}>
-            <IconSymbol name="chevron.right" size={24} color="#687076" />
+            <ThemedText>{">"}</ThemedText>
             <ThemedView style={styles.processorContent}>
               <ThemedText>REVERSE ROOM</ThemedText>
             </ThemedView>
@@ -21,7 +21,7 @@ export default function Explore() {
         </Link>
         <Link href="./experiences/double" asChild>
           <TouchableOpacity style={styles.processorLink}>
-            <IconSymbol name="chevron.right" size={24} color="#687076" />
+            <ThemedText>{">"}</ThemedText>
             <ThemedView style={styles.processorContent}>
               <ThemedText>DOUBLE OR NOTHING</ThemedText>
             </ThemedView>
@@ -29,7 +29,7 @@ export default function Explore() {
         </Link>
         <Link href="./experiences/aichamber" asChild>
           <TouchableOpacity style={styles.processorLink}>
-            <IconSymbol name="chevron.right" size={24} color="#687076" />
+            <ThemedText>{">"}</ThemedText>
             <ThemedView style={styles.processorContent}>
               <ThemedText>AI CHAMBER</ThemedText>
             </ThemedView>
@@ -37,7 +37,7 @@ export default function Explore() {
         </Link>
         <Link href="./experiences/zork" asChild>
           <TouchableOpacity style={styles.processorLink}>
-            <IconSymbol name="chevron.right" size={24} color="#687076" />
+            <ThemedText>{">"}</ThemedText>
             <ThemedView style={styles.processorContent}>
               <ThemedText>THE TEMPLE</ThemedText>
             </ThemedView>
