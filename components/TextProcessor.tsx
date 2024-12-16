@@ -22,12 +22,12 @@ export function TextProcessor({ processService }: TextProcessorProps) {
     setOutputText(_ => [`${result.processedText}`]);
   }, []);
 
-  const processText = useCallback(async (text: string) => {
+  const processText = useCallback(async (text: string, previousOutputs: string[]) => {
     if (text.trim()) {
       setIsProcessing(true);
       setInputText('');
       try {
-        const result = await Promise.resolve(processService.processText(text, outputText));
+        const result = await Promise.resolve(processService.processText(text, previousOutputs));
         setOutputText(prev => [...prev, `${result.processedText}`]);
       } catch (error) {
         setOutputText(prev => [
@@ -65,7 +65,7 @@ export function TextProcessor({ processService }: TextProcessorProps) {
             value={inputText}
             onChangeText={setInputText}
             placeholderTextColor={Colors.light.icon}
-            onSubmitEditing={() => !isProcessing && processText(inputText)}
+            onSubmitEditing={() => !isProcessing && processText(inputText, outputText)}
             returnKeyType="send"
             submitBehavior='submit'
             blurOnSubmit={false}

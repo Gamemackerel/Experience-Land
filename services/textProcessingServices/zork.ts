@@ -156,8 +156,8 @@ Down the dark hall in front of you, you can see it opens into a large antechambe
 
           NEVER use any other location outside of the locations navigable from the current one.
 
-          IMPORTANT: The player can navigate to a location through another location if it is navigable
-          i.e. "move through <KITCHEN> to <BATHROOM>" the next current location would be <BATHROOM>.
+          THE ONLY WAY to set currentLocationName, is if the user requested action is to move to a new location,
+          either through an adjoining place or directly. In all other cases, the currentLocationName should not change.
 
           DO NOT provide a full new game state in the response. Only provide the changes to the game state that result from the action.
 
@@ -194,12 +194,11 @@ Down the dark hall in front of you, you can see it opens into a large antechambe
       const response = await this.client.messages.create({
         model: "claude-3-sonnet-20240229",
         max_tokens: 1024,
-        messages:messagesForGameMaster
+        messages: messagesForGameMaster
       });
 
       // Parse and validate the new state
       const stateChange = JSON.parse(response.content[0].text);
-      debugger;
       this.map[stateChange['currentLocationName']].visited = true;
       return stateChange;
     } catch (error) {
@@ -276,7 +275,7 @@ Down the dark hall in front of you, you can see it opens into a large antechambe
         Current state: ${state}
         Current Location: ${JSON.stringify(this.map[JSON.parse(this.currentState)['location']])}
 
-        When in battle, don't mention the navagable places.
+        When in battle, don't mention the navigable places.
 
         NEVER say that the player does an action, unless it is described by what just happened.
         What just happened was this: ${stateChange['changes']}
@@ -287,7 +286,6 @@ Down the dark hall in front of you, you can see it opens into a large antechambe
         Keep flavor text to a minimum. If something happened, try to briefly explain why and connect it to the players action.
         `
       }];
-    //   debugger;
       const response = await this.client.messages.create({
         model: "claude-3-sonnet-20240229",
         max_tokens: 1024,

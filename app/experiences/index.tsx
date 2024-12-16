@@ -43,6 +43,14 @@ export default function Explore() {
             </ThemedView>
           </TouchableOpacity>
         </Link>
+        <Link href="./experiences/bork" asChild>
+          <TouchableOpacity style={styles.processorLink}>
+            <ThemedText>{">"}</ThemedText>
+            <ThemedView style={styles.processorContent}>
+              <ThemedText>THE TEMPLE 2</ThemedText>
+            </ThemedView>
+          </TouchableOpacity>
+        </Link>
       </ThemedView>
 
       {/* ... other sections ... */}
